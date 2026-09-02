@@ -27,10 +27,14 @@ Neither captures the two things that actually move a score:
 
 StudyPath does it properly. The recommendation engine
 ([`backend/app/algorithm/`](backend/app/algorithm/)) is a real piece of
-software — four modules of pure, unit-tested functions — not a wrapper around a
+software — five modules of pure, unit-tested functions — not a wrapper around a
 spreadsheet. The [How the recommendation algorithm
 works](#how-the-recommendation-algorithm-works) section below is the part worth
 reading.
+
+Three pages: **Study Plan** (the ranked list, with per-topic links and a jump to
+practice), **Dashboard** (readiness trend + a mastery heatmap), and **Log
+Attempt** (one at a time, or a CSV of a whole practice session).
 
 ## Architecture
 
@@ -45,9 +49,9 @@ reading.
 
 | Layer | What lives there | Why it's separate |
 |---|---|---|
-| [`app/algorithm/`](backend/app/algorithm/) | `mastery` · `decay` · `priority` · `readiness` | Pure functions — take plain values and an explicit `now`, return numbers/dataclasses. Tested against hand-computed values with no database or server running. |
-| [`app/services/`](backend/app/services/) | `record_attempt` (the one write path), `topic_snapshots` (the one ORM→algorithm projection), `seeding` | Both the seed script and `POST /api/attempts` fold attempts into mastery through *one* function, so the update rule exists in exactly one place. |
-| [`app/routers/`](backend/app/routers/) | `topics` · `attempts` · `mastery` · `study_plan` | Thin HTTP handlers; all the logic is a layer down. |
+| [`app/algorithm/`](backend/app/algorithm/) | `mastery` · `decay` · `priority` · `readiness` · `progress` | Pure functions — take plain values and an explicit `now`, return numbers/dataclasses. Tested against hand-computed values with no database or server running. |
+| [`app/services/`](backend/app/services/) | `record_attempt` (the one write path), `topic_snapshots` (the one ORM→algorithm projection), `seeding`, `bulk_import`, `progress` | Both the seed script and `POST /api/attempts` fold attempts into mastery through *one* function, so the update rule exists in exactly one place. |
+| [`app/routers/`](backend/app/routers/) | `topics` · `attempts` · `mastery` · `study_plan` · `progress` · `resources` | Thin HTTP handlers; all the logic is a layer down. |
 | [`frontend/src/`](frontend/src/) | `pages/` · `components/` · `api/` (typed fetch client) | Talks to the API over a relative `/api` path; Vite proxies it in dev. |
 
 ## How the recommendation algorithm works
@@ -130,6 +134,15 @@ coded "remind me to review things"; it emerges from decay + urgency. That
 behaviour has a dedicated test:
 [`test_high_mastery_but_stale_is_pushed_back_up_by_decay`](backend/app/tests/test_mastery_engine.py).
 
+### The readiness trend is reconstructed, not stored
+
+`GET /api/progress` doesn't read a table of daily snapshots — there isn't one. It
+takes the whole attempt history, replays the EWMA forward, and snapshots the
+frequency-weighted, decay-adjusted readiness at the end of each day
+([`app/algorithm/progress.py`](backend/app/algorithm/progress.py), O(attempts +
+days)). A downward drift in the chart during a study break is the forgetting
+curve pulling against zero new practice — the same mechanism, viewed over time.
+
 ## Running it
 
 Clean clone to running app in a couple of minutes. Requires **Python 3.11+**
@@ -170,11 +183,11 @@ Nothing to seed by hand if you skip `python -m app.seed` — the empty state has
 ### Tests
 
 ```bash
-cd backend && pytest               # 80 tests
+cd backend && pytest               # 107 tests
 ```
 
 [`app/tests/test_mastery_engine.py`](backend/app/tests/test_mastery_engine.py) is
-the one to read: 48 cases with the arithmetic worked out in comments next to each
+the one to read: 52 cases with the arithmetic worked out in comments next to each
 assertion, covering every ranking edge case (never-attempted surfaces via
 exploration; perfect-and-fresh sinks; stale-and-strong resurfaces; ties break by
 frequency weight).
@@ -185,8 +198,11 @@ frequency weight).
 |---|---|---|
 | `GET`  | `/api/topics` | the full 35-skill taxonomy |
 | `GET`  | `/api/mastery` | every skill's mastery / decay / confidence + readiness roll-up |
-| `GET`  | `/api/study-plan?limit=5` | ranked recommendations with reason strings |
+| `GET`  | `/api/study-plan?limit=5` | ranked recommendations, each with a reason string and study links |
+| `GET`  | `/api/progress?days=30` | readiness per day, replayed from history |
+| `GET`  | `/api/resources/{topic_id}` | study links for one topic |
 | `POST` | `/api/attempts` | log one attempt `{topic_id, correct, time_taken_seconds, difficulty}`; returns the updated mastery |
+| `POST` | `/api/attempts/bulk` | import a CSV of attempts (`GET /api/attempts/template.csv` for the format) |
 | `POST` | `/api/topics/seed` | dev only — (re)generate the synthetic history |
 
 ## Data & content policy
@@ -197,18 +213,26 @@ seed script generates entirely synthetic attempts (`topic=Linear Functions,
 correct=false, 47s`, never any question content). Topic-frequency weights are
 approximate and tutor-informed, not scraped from any proprietary source.
 
+## Deployment
+
+Config is in the repo — [`render.yaml`](render.yaml) (FastAPI web service + free
+Postgres, seeds itself on deploy), [`backend/Dockerfile`](backend/Dockerfile),
+and [`frontend/vercel.json`](frontend/vercel.json) (SPA rewrites + `/api` proxy).
+Swapping SQLite → Postgres is just `DATABASE_URL`; the psycopg driver is selected
+automatically (`postgres://` URLs are normalised in
+[`config.py`](backend/app/config.py)) and lives in
+[`requirements-prod.txt`](backend/requirements-prod.txt) so local dev stays lean.
+
+1. **API** — Render → New → Blueprint → this repo. Set `CORS_ORIGINS` to the
+   frontend URL once it exists.
+2. **Frontend** — Vercel → import repo, root `frontend/`. Point the `/api`
+   rewrite in `vercel.json` at the Render URL.
+
 ## What I'd build next
 
-- **CSV bulk upload** — paste a full practice-session breakdown instead of one
-  attempt at a time (`POST /api/attempts/bulk`, already stubbed in the endpoint
-  list).
-- **Readiness-over-time chart** — persist a daily readiness snapshot and plot the
-  trend; the roll-up already exists, it just isn't stored.
-- **Per-topic resource links** — the `Resource` model is in the schema; wire a
-  small admin list and surface "watch/read this" on each study-plan card.
 - **Calibrated scaled score** — map the 0–1 readiness number onto the 400–1600
   scale using real concordance data.
-- **Multi-user** — add auth and scope every query by user; the write path and
-  snapshot projection are already the only two places that would need to change.
-- **Deploy** — Render/Railway for the API (swap SQLite → Postgres, one line),
-  Vercel for the frontend.
+- **Multi-user** — add auth and scope every query by user; the write path and the
+  snapshot projection are the only two places that would need to change.
+- **Adaptive difficulty in the plan** — recommend *which* difficulty band to
+  practise per topic from the per-difficulty accuracy already being logged.

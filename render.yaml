@@ -1,0 +1,25 @@
+# Render blueprint: FastAPI web service + free Postgres.
+# Deploy with: render.com -> New -> Blueprint -> point at this repo.
+services:
+  - type: web
+    name: sat-studypath-api
+    runtime: python
+    rootDir: backend
+    plan: free
+    buildCommand: pip install -r requirements-prod.txt
+    preDeployCommand: python -m app.seed   # (re)loads the synthetic demo history
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: sat-studypath-db
+          property: connectionString
+      - key: ENABLE_DEV_ENDPOINTS
+        value: "false"
+      - key: CORS_ORIGINS
+        sync: false   # set to the deployed frontend origin, e.g. https://sat-studypath.vercel.app
+
+databases:
+  - name: sat-studypath-db
+    plan: free

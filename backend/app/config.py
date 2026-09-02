@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from functools import lru_cache
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -28,6 +29,16 @@ class Settings(BaseSettings):
     # Guards POST /api/topics/seed (it wipes and regenerates data). On for local
     # dev; set false in any shared deployment.
     enable_dev_endpoints: bool = True
+
+    @field_validator("database_url")
+    @classmethod
+    def _use_psycopg_driver(cls, url: str) -> str:
+        """Managed Postgres providers hand out ``postgres://`` / ``postgresql://``
+        URLs; SQLAlchemy needs the driver named explicitly for psycopg 3."""
+        for prefix in ("postgres://", "postgresql://"):
+            if url.startswith(prefix):
+                return "postgresql+psycopg://" + url[len(prefix) :]
+        return url
 
     @property
     def cors_origin_list(self) -> list[str]:

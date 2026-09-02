@@ -1,0 +1,6 @@
+# Production extras on top of the dev requirements.
+-r requirements.txt
+
+# PostgreSQL driver. Not needed for local SQLite dev; the app selects it
+# automatically when DATABASE_URL points at Postgres (see app/config.py).
+psycopg[binary]==3.2.3
