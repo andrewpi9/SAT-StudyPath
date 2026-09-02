@@ -30,6 +30,11 @@ class Settings(BaseSettings):
     # On for local dev; set false in any shared deployment.
     enable_dev_endpoints: bool = True
 
+    # On startup, if the demo account doesn't exist yet, create it with a
+    # synthetic history. Lets a fresh deployment's "Try the demo account" button
+    # work with no manual seeding. Off for local dev (use `python -m app.seed`).
+    seed_demo_on_startup: bool = False
+
     # Auth. jwt_secret MUST be overridden in any deployment.
     jwt_secret: str = "dev-secret-do-not-use-in-production"
     jwt_expire_minutes: int = 60 * 24 * 7  # one week

@@ -3,7 +3,7 @@
 **A personalized SAT study-path generator.** It takes a student's practice
 results *by topic* and produces a ranked "what to study next" plan using an
 actual adaptive algorithm — recency-weighted mastery scoring, forgetting-curve
-decay, and real digital-SAT topic-frequency weighting — not a static checklist.
+decay, and real digital-SAT topic-frequency weighting.
 
 <p align="center">
   <img src="docs/study-plan.png" alt="Today's Study Plan — a ranked list of skills with a plain-English reason for each" width="49%">
@@ -13,7 +13,7 @@ decay, and real digital-SAT topic-frequency weighting — not a static checklist
 ## Why I built this
 
 I ran an SAT tutoring channel — 60+ videos, 5M+ views — and the question I got
-most often wasn't *"how do I solve this?"* It was **"what should I study next?"**
+most often wasn't *"how do I solve this?"* but **"what should I study next?"**
 
 Most prep tools answer that with a static checklist or a raw accuracy number.
 Neither captures the two things that actually move a score:
@@ -224,17 +224,19 @@ approximate and tutor-informed, not scraped from any proprietary source.
 ## Deployment
 
 Config is in the repo — [`render.yaml`](render.yaml) (FastAPI web service + free
-Postgres, seeds itself on deploy), [`backend/Dockerfile`](backend/Dockerfile),
-and [`frontend/vercel.json`](frontend/vercel.json) (SPA rewrites + `/api` proxy).
+Postgres), [`backend/Dockerfile`](backend/Dockerfile), and
+[`frontend/vercel.json`](frontend/vercel.json) (SPA rewrites + `/api` proxy).
 Swapping SQLite → Postgres is just `DATABASE_URL`; the psycopg driver is selected
 automatically (`postgres://` URLs are normalised in
 [`config.py`](backend/app/config.py)) and lives in
 [`requirements-prod.txt`](backend/requirements-prod.txt) so local dev stays lean.
+`SEED_DEMO_ON_STARTUP=true` recreates the demo account on first boot.
 
-1. **API** — Render → New → Blueprint → this repo. Set `CORS_ORIGINS` to the
-   frontend URL once it exists.
-2. **Frontend** — Vercel → import repo, root `frontend/`. Point the `/api`
-   rewrite in `vercel.json` at the Render URL.
+1. **API** — Render → New → Blueprint → this repo. It provisions the web service
+   + Postgres and generates `JWT_SECRET`; set `CORS_ORIGINS` to the frontend URL
+   once it exists.
+2. **Frontend** — Vercel → import repo, root directory `frontend`. Edit the
+   `/api` rewrite in `vercel.json` to point at the Render URL.
 
 ## What I'd build next
 

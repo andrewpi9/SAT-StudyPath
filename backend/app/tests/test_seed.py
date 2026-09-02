@@ -10,9 +10,9 @@ from app.algorithm.mastery import COLD_START_MASTERY, confidence_from_attempts, 
 from app.models.attempt import Attempt
 from app.models.mastery import TopicMastery
 from app.models.topic import Topic
-from app.services.seeding import generate_history, seed_database
+from app.services.seeding import ensure_demo_seeded, generate_history, seed_database
 from app.services.topics import load_taxonomy
-from app.services.users import get_or_create_demo_user
+from app.services.users import DEMO_EMAIL, get_or_create_demo_user, get_user_by_email
 
 
 def _seed(db, *, rng_seed: int = 42, attempts: int | None = None) -> tuple[int, int]:
@@ -114,3 +114,15 @@ def test_seed_database_is_reproducible_and_per_user(db) -> None:
     assert second.attempts_created == first.attempts_created
     assert db.scalar(select(func.count(Attempt.id))) == second.attempts_created
     assert db.scalar(select(func.count(Topic.id))) == 35
+
+
+def test_ensure_demo_seeded_creates_the_account_once(db) -> None:
+    assert get_user_by_email(db, DEMO_EMAIL) is None
+
+    assert ensure_demo_seeded(db) is True
+    demo = get_user_by_email(db, DEMO_EMAIL)
+    assert demo is not None
+    assert 150 <= db.scalar(select(func.count(Attempt.id)).where(Attempt.user_id == demo.id)) <= 250
+
+    # Idempotent: a second call is a no-op.
+    assert ensure_demo_seeded(db) is False

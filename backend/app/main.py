@@ -14,13 +14,18 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.database import init_db
+from app.database import SessionLocal, init_db
 from app.routers import attempts, auth, mastery, progress, resources, study_plan, topics
 
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
     init_db()
+    if settings.seed_demo_on_startup:
+        from app.services.seeding import ensure_demo_seeded
+
+        with SessionLocal() as db:
+            ensure_demo_seeded(db)
     yield
 
 

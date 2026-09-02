@@ -7,7 +7,6 @@ services:
     rootDir: backend
     plan: free
     buildCommand: pip install -r requirements-prod.txt
-    preDeployCommand: python -m app.seed   # (re)loads the synthetic demo history
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /api/health
     envVars:
@@ -19,6 +18,8 @@ services:
         generateValue: true
       - key: ENABLE_DEV_ENDPOINTS
         value: "true"   # demo deployment: the "Load demo data" button uses it
+      - key: SEED_DEMO_ON_STARTUP
+        value: "true"   # creates demo@studypath.app on first boot
       - key: CORS_ORIGINS
         sync: false   # set to the deployed frontend origin, e.g. https://sat-studypath.vercel.app
 

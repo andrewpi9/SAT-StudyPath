@@ -208,6 +208,22 @@ def wipe_all(db: Session) -> None:
     db.flush()
 
 
+def ensure_demo_seeded(db: Session) -> bool:
+    """Create the demo account with a synthetic history if it doesn't exist yet.
+
+    Called on startup in deployments (SEED_DEMO_ON_STARTUP) so the "Try the demo
+    account" button works with no manual step. Returns True if it seeded.
+    """
+    from app.services.users import get_or_create_demo_user, get_user_by_email
+
+    if get_user_by_email(db, "demo@studypath.app") is not None:
+        return False
+    demo = get_or_create_demo_user(db)
+    db.commit()
+    seed_database(db, user_id=demo.id, rng_seed=42)
+    return True
+
+
 def seed_database(
     db: Session,
     *,
