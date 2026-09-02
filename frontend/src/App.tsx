@@ -1,13 +1,17 @@
-import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, HashRouter, NavLink, Route, Routes } from 'react-router-dom'
 
 import { AuthProvider } from './auth/AuthProvider'
 import { useAuth } from './auth/useAuth'
 import BrandMark from './components/BrandMark'
 import ThemeToggle from './components/ThemeToggle'
+import { resetDemo } from './demo/store'
+import { DEMO } from './lib/demo'
 import DashboardPage from './pages/DashboardPage'
 import LogAttemptPage from './pages/LogAttemptPage'
 import LoginPage from './pages/LoginPage'
 import StudyPlanPage from './pages/StudyPlanPage'
+
+const Router = DEMO ? HashRouter : BrowserRouter
 
 const NAV = [
   { to: '/', label: 'Study Plan', end: true },
@@ -23,10 +27,48 @@ const navLinkClass = ({ isActive }: { isActive: boolean }) =>
       : 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-800 dark:text-slate-400 dark:hover:border-slate-700 dark:hover:text-slate-200',
   ].join(' ')
 
-function AuthedApp() {
+function AccountArea() {
   const { user, logout } = useAuth()
+
+  if (DEMO) {
+    return (
+      <>
+        <span className="rounded-full bg-indigo-100 px-2 py-0.5 text-xs font-medium text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-300">
+          Demo
+        </span>
+        <button
+          type="button"
+          onClick={() => {
+            resetDemo()
+            window.location.reload()
+          }}
+          className="text-sm font-medium text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200"
+        >
+          Reset data
+        </button>
+      </>
+    )
+  }
+
   return (
-    <BrowserRouter>
+    <>
+      <span className="hidden text-sm text-slate-500 dark:text-slate-400 sm:inline">
+        {user?.email}
+      </span>
+      <button
+        type="button"
+        onClick={logout}
+        className="text-sm font-medium text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200"
+      >
+        Log out
+      </button>
+    </>
+  )
+}
+
+function AuthedApp() {
+  return (
+    <Router>
       <div className="min-h-screen">
         <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/90 backdrop-blur dark:border-slate-800 dark:bg-slate-900/90">
           <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-8 gap-y-3 px-6 pt-4">
@@ -45,16 +87,7 @@ function AuthedApp() {
             </nav>
             <div className="ml-auto flex items-center gap-3 pb-3">
               <ThemeToggle />
-              <span className="hidden text-sm text-slate-500 dark:text-slate-400 sm:inline">
-                {user?.email}
-              </span>
-              <button
-                type="button"
-                onClick={logout}
-                className="text-sm font-medium text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200"
-              >
-                Log out
-              </button>
+              <AccountArea />
             </div>
           </div>
         </header>
@@ -65,7 +98,7 @@ function AuthedApp() {
           <Route path="/log" element={<LogAttemptPage />} />
         </Routes>
       </div>
-    </BrowserRouter>
+    </Router>
   )
 }
 

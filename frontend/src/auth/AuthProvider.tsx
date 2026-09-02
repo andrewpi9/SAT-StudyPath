@@ -2,13 +2,15 @@ import { type ReactNode, useCallback, useEffect, useState } from 'react'
 
 import { getMe, login as apiLogin, signup as apiSignup, type User } from '../api/auth'
 import { getToken, setToken, setUnauthorizedHandler } from '../api/client'
+import { DEMO, DEMO_USER } from '../lib/demo'
 import { AuthContext, type AuthStatus } from './context'
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
-  const [status, setStatus] = useState<AuthStatus>(() =>
-    getToken() ? 'loading' : 'anonymous',
-  )
+  const [user, setUser] = useState<User | null>(DEMO ? DEMO_USER : null)
+  const [status, setStatus] = useState<AuthStatus>(() => {
+    if (DEMO) return 'authenticated'
+    return getToken() ? 'loading' : 'anonymous'
+  })
 
   const logout = useCallback(() => {
     setToken(null)
@@ -44,7 +46,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Validate a stored token once on load.
   useEffect(() => {
-    if (!getToken()) return
+    if (DEMO || !getToken()) return
     getMe().then(
       (account) => {
         setUser(account)

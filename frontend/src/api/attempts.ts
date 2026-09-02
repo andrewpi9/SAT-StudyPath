@@ -1,3 +1,6 @@
+import * as demoApi from '../demo/api'
+import { CSV_TEMPLATE } from '../demo/csv'
+import { DEMO } from '../lib/demo'
 import { api, ApiError, authHeaders } from './client'
 import type { AttemptResult, Difficulty } from './types'
 
@@ -9,7 +12,7 @@ export interface LogAttemptPayload {
 }
 
 export function logAttempt(payload: LogAttemptPayload): Promise<AttemptResult> {
-  return api.post<AttemptResult>('/attempts', payload)
+  return DEMO ? demoApi.logAttempt(payload) : api.post<AttemptResult>('/attempts', payload)
 }
 
 export interface BulkImportResult {
@@ -18,9 +21,13 @@ export interface BulkImportResult {
   errors: { row: number; message: string }[]
 }
 
-export const CSV_TEMPLATE_URL = '/api/attempts/template.csv'
+export const CSV_TEMPLATE_URL = DEMO
+  ? `data:text/csv;charset=utf-8,${encodeURIComponent(CSV_TEMPLATE)}`
+  : '/api/attempts/template.csv'
 
 export async function bulkImportAttempts(file: File): Promise<BulkImportResult> {
+  if (DEMO) return demoApi.bulkImportAttempts(file)
+
   const form = new FormData()
   form.append('file', file)
   // Not api.post: FormData needs the browser to set its own multipart boundary.

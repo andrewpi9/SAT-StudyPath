@@ -1,0 +1,2063 @@
+{
+"topics": [
+{
+"id": 1,
+"section": "Math",
+"domain": "Algebra",
+"skill_name": "Linear equations in one variable",
+"frequency_weight": 0.07
+},
+{
+"id": 2,
+"section": "Math",
+"domain": "Algebra",
+"skill_name": "Linear equations in two variables",
+"frequency_weight": 0.07
+},
+{
+"id": 3,
+"section": "Math",
+"domain": "Algebra",
+"skill_name": "Linear functions",
+"frequency_weight": 0.08
+},
+{
+"id": 4,
+"section": "Math",
+"domain": "Algebra",
+"skill_name": "Systems of two linear equations in two variables",
+"frequency_weight": 0.07
+},
+{
+"id": 5,
+"section": "Math",
+"domain": "Algebra",
+"skill_name": "Linear inequalities in one or two variables",
+"frequency_weight": 0.06
+},
+{
+"id": 6,
+"section": "Math",
+"domain": "Advanced Math",
+"skill_name": "Equivalent expressions",
+"frequency_weight": 0.07
+},
+{
+"id": 7,
+"section": "Math",
+"domain": "Advanced Math",
+"skill_name": "Nonlinear equations in one variable",
+"frequency_weight": 0.07
+},
+{
+"id": 8,
+"section": "Math",
+"domain": "Advanced Math",
+"skill_name": "Systems of nonlinear equations",
+"frequency_weight": 0.06
+},
+{
+"id": 9,
+"section": "Math",
+"domain": "Advanced Math",
+"skill_name": "Nonlinear functions",
+"frequency_weight": 0.08
+},
+{
+"id": 10,
+"section": "Math",
+"domain": "Advanced Math",
+"skill_name": "Quadratic and exponential models",
+"frequency_weight": 0.07
+},
+{
+"id": 11,
+"section": "Math",
+"domain": "Problem-Solving and Data Analysis",
+"skill_name": "Ratios, rates, and proportional relationships",
+"frequency_weight": 0.03
+},
+{
+"id": 12,
+"section": "Math",
+"domain": "Problem-Solving and Data Analysis",
+"skill_name": "Percentages",
+"frequency_weight": 0.025
+},
+{
+"id": 13,
+"section": "Math",
+"domain": "Problem-Solving and Data Analysis",
+"skill_name": "One-variable data: center and spread",
+"frequency_weight": 0.025
+},
+{
+"id": 14,
+"section": "Math",
+"domain": "Problem-Solving and Data Analysis",
+"skill_name": "Two-variable data: models and scatterplots",
+"frequency_weight": 0.025
+},
+{
+"id": 15,
+"section": "Math",
+"domain": "Problem-Solving and Data Analysis",
+"skill_name": "Probability and conditional probability",
+"frequency_weight": 0.02
+},
+{
+"id": 16,
+"section": "Math",
+"domain": "Problem-Solving and Data Analysis",
+"skill_name": "Inference from sample statistics and margin of error",
+"frequency_weight": 0.025
+},
+{
+"id": 17,
+"section": "Math",
+"domain": "Geometry and Trigonometry",
+"skill_name": "Area and volume",
+"frequency_weight": 0.04
+},
+{
+"id": 18,
+"section": "Math",
+"domain": "Geometry and Trigonometry",
+"skill_name": "Lines, angles, and triangles",
+"frequency_weight": 0.04
+},
+{
+"id": 19,
+"section": "Math",
+"domain": "Geometry and Trigonometry",
+"skill_name": "Right triangles and trigonometry",
+"frequency_weight": 0.04
+},
+{
+"id": 20,
+"section": "Math",
+"domain": "Geometry and Trigonometry",
+"skill_name": "Circles",
+"frequency_weight": 0.03
+},
+{
+"id": 21,
+"section": "ReadingWriting",
+"domain": "Information and Ideas",
+"skill_name": "Central ideas and details",
+"frequency_weight": 0.07
+},
+{
+"id": 22,
+"section": "ReadingWriting",
+"domain": "Information and Ideas",
+"skill_name": "Command of evidence: textual",
+"frequency_weight": 0.07
+},
+{
+"id": 23,
+"section": "ReadingWriting",
+"domain": "Information and Ideas",
+"skill_name": "Command of evidence: quantitative",
+"frequency_weight": 0.06
+},
+{
+"id": 24,
+"section": "ReadingWriting",
+"domain": "Information and Ideas",
+"skill_name": "Inferences",
+"frequency_weight": 0.06
+},
+{
+"id": 25,
+"section": "ReadingWriting",
+"domain": "Craft and Structure",
+"skill_name": "Words in context",
+"frequency_weight": 0.12
+},
+{
+"id": 26,
+"section": "ReadingWriting",
+"domain": "Craft and Structure",
+"skill_name": "Text structure and purpose",
+"frequency_weight": 0.09
+},
+{
+"id": 27,
+"section": "ReadingWriting",
+"domain": "Craft and Structure",
+"skill_name": "Cross-text connections",
+"frequency_weight": 0.07
+},
+{
+"id": 28,
+"section": "ReadingWriting",
+"domain": "Expression of Ideas",
+"skill_name": "Rhetorical synthesis",
+"frequency_weight": 0.09
+},
+{
+"id": 29,
+"section": "ReadingWriting",
+"domain": "Expression of Ideas",
+"skill_name": "Transitions",
+"frequency_weight": 0.07
+},
+{
+"id": 30,
+"section": "ReadingWriting",
+"domain": "Expression of Ideas",
+"skill_name": "Precision and concision",
+"frequency_weight": 0.04
+},
+{
+"id": 31,
+"section": "ReadingWriting",
+"domain": "Standard English Conventions",
+"skill_name": "Sentence boundaries and punctuation",
+"frequency_weight": 0.08
+},
+{
+"id": 32,
+"section": "ReadingWriting",
+"domain": "Standard English Conventions",
+"skill_name": "Subject-verb and pronoun agreement",
+"frequency_weight": 0.06
+},
+{
+"id": 33,
+"section": "ReadingWriting",
+"domain": "Standard English Conventions",
+"skill_name": "Verb tense and form",
+"frequency_weight": 0.05
+},
+{
+"id": 34,
+"section": "ReadingWriting",
+"domain": "Standard English Conventions",
+"skill_name": "Modifiers and parallel structure",
+"frequency_weight": 0.04
+},
+{
+"id": 35,
+"section": "ReadingWriting",
+"domain": "Standard English Conventions",
+"skill_name": "Possessives and apostrophes",
+"frequency_weight": 0.03
+}
+],
+"attempts": [
+{
+"topic_id": 6,
+"correct": true,
+"difficulty": "hard",
+"days_ago": 24.3056
+},
+{
+"topic_id": 10,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 23.6976
+},
+{
+"topic_id": 35,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 23.1639
+},
+{
+"topic_id": 35,
+"correct": false,
+"difficulty": "easy",
+"days_ago": 22.9718
+},
+{
+"topic_id": 9,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 22.6916
+},
+{
+"topic_id": 6,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 22.621
+},
+{
+"topic_id": 10,
+"correct": true,
+"difficulty": "hard",
+"days_ago": 22.2799
+},
+{
+"topic_id": 26,
+"correct": false,
+"difficulty": "easy",
+"days_ago": 21.885
+},
+{
+"topic_id": 4,
+"correct": false,
+"difficulty": "easy",
+"days_ago": 21.8177
+},
+{
+"topic_id": 14,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 21.4856
+},
+{
+"topic_id": 9,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 21.1631
+},
+{
+"topic_id": 14,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 20.928
+},
+{
+"topic_id": 9,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 20.7107
+},
+{
+"topic_id": 10,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 20.5609
+},
+{
+"topic_id": 14,
+"correct": false,
+"difficulty": "hard",
+"days_ago": 20.5513
+},
+{
+"topic_id": 14,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 20.2576
+},
+{
+"topic_id": 14,
+"correct": false,
+"difficulty": "easy",
+"days_ago": 20.0056
+},
+{
+"topic_id": 14,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 19.8946
+},
+{
+"topic_id": 10,
+"correct": true,
+"difficulty": "hard",
+"days_ago": 19.6948
+},
+{
+"topic_id": 31,
+"correct": false,
+"difficulty": "easy",
+"days_ago": 19.5947
+},
+{
+"topic_id": 26,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 19.1206
+},
+{
+"topic_id": 31,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 18.7929
+},
+{
+"topic_id": 10,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 18.605
+},
+{
+"topic_id": 4,
+"correct": true,
+"difficulty": "hard",
+"days_ago": 18.1381
+},
+{
+"topic_id": 3,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 18.1005
+},
+{
+"topic_id": 14,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 18.0596
+},
+{
+"topic_id": 35,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 17.756
+},
+{
+"topic_id": 9,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 17.4073
+},
+{
+"topic_id": 14,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 17.4055
+},
+{
+"topic_id": 11,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 17.3972
+},
+{
+"topic_id": 7,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 17.242
+},
+{
+"topic_id": 9,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 17.235
+},
+{
+"topic_id": 7,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 17.2033
+},
+{
+"topic_id": 10,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 17.0222
+},
+{
+"topic_id": 31,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 16.9829
+},
+{
+"topic_id": 11,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 16.8191
+},
+{
+"topic_id": 7,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 16.5325
+},
+{
+"topic_id": 6,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 16.5014
+},
+{
+"topic_id": 11,
+"correct": true,
+"difficulty": "hard",
+"days_ago": 16.3584
+},
+{
+"topic_id": 3,
+"correct": false,
+"difficulty": "easy",
+"days_ago": 16.2524
+},
+{
+"topic_id": 2,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 16.1015
+},
+{
+"topic_id": 35,
+"correct": true,
+"difficulty": "hard",
+"days_ago": 16.1009
+},
+{
+"topic_id": 26,
+"correct": false,
+"difficulty": "hard",
+"days_ago": 16.0432
+},
+{
+"topic_id": 10,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 15.9875
+},
+{
+"topic_id": 12,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 15.9336
+},
+{
+"topic_id": 7,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 15.8718
+},
+{
+"topic_id": 11,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 15.8281
+},
+{
+"topic_id": 7,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 15.7928
+},
+{
+"topic_id": 12,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 15.6377
+},
+{
+"topic_id": 3,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 15.6097
+},
+{
+"topic_id": 12,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 15.5768
+},
+{
+"topic_id": 26,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 15.572
+},
+{
+"topic_id": 12,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 15.5364
+},
+{
+"topic_id": 7,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 15.5089
+},
+{
+"topic_id": 19,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 15.3441
+},
+{
+"topic_id": 11,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 15.1838
+},
+{
+"topic_id": 7,
+"correct": false,
+"difficulty": "easy",
+"days_ago": 15.1036
+},
+{
+"topic_id": 6,
+"correct": true,
+"difficulty": "hard",
+"days_ago": 15.0054
+},
+{
+"topic_id": 6,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 14.93
+},
+{
+"topic_id": 30,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 14.7132
+},
+{
+"topic_id": 1,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 14.7081
+},
+{
+"topic_id": 3,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 14.6548
+},
+{
+"topic_id": 4,
+"correct": false,
+"difficulty": "easy",
+"days_ago": 14.54
+},
+{
+"topic_id": 18,
+"correct": false,
+"difficulty": "easy",
+"days_ago": 14.277
+},
+{
+"topic_id": 4,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 14.2671
+},
+{
+"topic_id": 6,
+"correct": true,
+"difficulty": "hard",
+"days_ago": 14.2609
+},
+{
+"topic_id": 7,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 13.6615
+},
+{
+"topic_id": 4,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 13.608
+},
+{
+"topic_id": 17,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 13.5539
+},
+{
+"topic_id": 28,
+"correct": true,
+"difficulty": "hard",
+"days_ago": 13.5319
+},
+{
+"topic_id": 31,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 13.5296
+},
+{
+"topic_id": 3,
+"correct": false,
+"difficulty": "easy",
+"days_ago": 13.4801
+},
+{
+"topic_id": 3,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 13.4559
+},
+{
+"topic_id": 21,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 13.4404
+},
+{
+"topic_id": 5,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 13.2784
+},
+{
+"topic_id": 26,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 13.2277
+},
+{
+"topic_id": 20,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 13.2062
+},
+{
+"topic_id": 17,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 13.1592
+},
+{
+"topic_id": 18,
+"correct": false,
+"difficulty": "easy",
+"days_ago": 12.8732
+},
+{
+"topic_id": 31,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 12.8215
+},
+{
+"topic_id": 7,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 12.6324
+},
+{
+"topic_id": 2,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 12.6247
+},
+{
+"topic_id": 20,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 12.4778
+},
+{
+"topic_id": 19,
+"correct": false,
+"difficulty": "easy",
+"days_ago": 12.3832
+},
+{
+"topic_id": 32,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 12.3477
+},
+{
+"topic_id": 1,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 12.1347
+},
+{
+"topic_id": 30,
+"correct": true,
+"difficulty": "hard",
+"days_ago": 11.9911
+},
+{
+"topic_id": 15,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 11.8362
+},
+{
+"topic_id": 1,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 11.7614
+},
+{
+"topic_id": 19,
+"correct": false,
+"difficulty": "hard",
+"days_ago": 11.6942
+},
+{
+"topic_id": 31,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 11.5964
+},
+{
+"topic_id": 17,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 11.4844
+},
+{
+"topic_id": 1,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 11.394
+},
+{
+"topic_id": 20,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 11.3889
+},
+{
+"topic_id": 11,
+"correct": false,
+"difficulty": "hard",
+"days_ago": 11.3579
+},
+{
+"topic_id": 27,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 11.264
+},
+{
+"topic_id": 31,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 11.1514
+},
+{
+"topic_id": 17,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 11.0914
+},
+{
+"topic_id": 28,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 10.9234
+},
+{
+"topic_id": 17,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 10.9146
+},
+{
+"topic_id": 15,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 10.6543
+},
+{
+"topic_id": 27,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 10.5255
+},
+{
+"topic_id": 15,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 10.5118
+},
+{
+"topic_id": 25,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 10.4982
+},
+{
+"topic_id": 13,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 10.4225
+},
+{
+"topic_id": 3,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 10.3713
+},
+{
+"topic_id": 25,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 10.2235
+},
+{
+"topic_id": 32,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 10.0745
+},
+{
+"topic_id": 21,
+"correct": true,
+"difficulty": "hard",
+"days_ago": 9.7254
+},
+{
+"topic_id": 22,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 9.511
+},
+{
+"topic_id": 20,
+"correct": false,
+"difficulty": "easy",
+"days_ago": 9.4675
+},
+{
+"topic_id": 28,
+"correct": false,
+"difficulty": "easy",
+"days_ago": 9.4396
+},
+{
+"topic_id": 27,
+"correct": false,
+"difficulty": "easy",
+"days_ago": 9.2652
+},
+{
+"topic_id": 19,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 9.2594
+},
+{
+"topic_id": 20,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 9.2282
+},
+{
+"topic_id": 32,
+"correct": true,
+"difficulty": "hard",
+"days_ago": 9.1888
+},
+{
+"topic_id": 11,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 9.1838
+},
+{
+"topic_id": 32,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 9.1459
+},
+{
+"topic_id": 5,
+"correct": false,
+"difficulty": "easy",
+"days_ago": 9.029
+},
+{
+"topic_id": 15,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 9.0154
+},
+{
+"topic_id": 34,
+"correct": false,
+"difficulty": "hard",
+"days_ago": 8.9918
+},
+{
+"topic_id": 30,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 8.9778
+},
+{
+"topic_id": 18,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 8.9722
+},
+{
+"topic_id": 28,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 8.9329
+},
+{
+"topic_id": 20,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 8.9067
+},
+{
+"topic_id": 1,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 8.8447
+},
+{
+"topic_id": 16,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 8.8039
+},
+{
+"topic_id": 3,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 8.6763
+},
+{
+"topic_id": 15,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 8.5655
+},
+{
+"topic_id": 12,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 8.5402
+},
+{
+"topic_id": 30,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 8.4456
+},
+{
+"topic_id": 29,
+"correct": false,
+"difficulty": "easy",
+"days_ago": 8.4108
+},
+{
+"topic_id": 27,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 8.2924
+},
+{
+"topic_id": 13,
+"correct": true,
+"difficulty": "hard",
+"days_ago": 8.2919
+},
+{
+"topic_id": 27,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 8.2589
+},
+{
+"topic_id": 22,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 8.2381
+},
+{
+"topic_id": 32,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 8.2064
+},
+{
+"topic_id": 27,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 8.1099
+},
+{
+"topic_id": 23,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 8.0819
+},
+{
+"topic_id": 21,
+"correct": true,
+"difficulty": "hard",
+"days_ago": 8.0394
+},
+{
+"topic_id": 12,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 8.0389
+},
+{
+"topic_id": 23,
+"correct": true,
+"difficulty": "hard",
+"days_ago": 8.0273
+},
+{
+"topic_id": 27,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 7.903
+},
+{
+"topic_id": 28,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 7.8555
+},
+{
+"topic_id": 22,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 7.7356
+},
+{
+"topic_id": 25,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 7.7242
+},
+{
+"topic_id": 22,
+"correct": false,
+"difficulty": "easy",
+"days_ago": 7.565
+},
+{
+"topic_id": 15,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 7.5501
+},
+{
+"topic_id": 13,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 7.4416
+},
+{
+"topic_id": 34,
+"correct": false,
+"difficulty": "easy",
+"days_ago": 7.3855
+},
+{
+"topic_id": 5,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 7.3584
+},
+{
+"topic_id": 34,
+"correct": false,
+"difficulty": "hard",
+"days_ago": 7.2699
+},
+{
+"topic_id": 28,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 7.2623
+},
+{
+"topic_id": 29,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 7.1051
+},
+{
+"topic_id": 29,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 7.1039
+},
+{
+"topic_id": 27,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 7.087
+},
+{
+"topic_id": 1,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 6.9894
+},
+{
+"topic_id": 31,
+"correct": true,
+"difficulty": "hard",
+"days_ago": 6.9819
+},
+{
+"topic_id": 1,
+"correct": true,
+"difficulty": "hard",
+"days_ago": 6.9538
+},
+{
+"topic_id": 5,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 6.8476
+},
+{
+"topic_id": 24,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 6.821
+},
+{
+"topic_id": 22,
+"correct": false,
+"difficulty": "easy",
+"days_ago": 6.8088
+},
+{
+"topic_id": 34,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 6.8082
+},
+{
+"topic_id": 33,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 6.7441
+},
+{
+"topic_id": 28,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 6.7345
+},
+{
+"topic_id": 22,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 6.6875
+},
+{
+"topic_id": 22,
+"correct": false,
+"difficulty": "easy",
+"days_ago": 6.6392
+},
+{
+"topic_id": 25,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 6.5538
+},
+{
+"topic_id": 32,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 6.548
+},
+{
+"topic_id": 13,
+"correct": false,
+"difficulty": "easy",
+"days_ago": 6.4898
+},
+{
+"topic_id": 29,
+"correct": true,
+"difficulty": "hard",
+"days_ago": 6.4373
+},
+{
+"topic_id": 29,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 6.4334
+},
+{
+"topic_id": 12,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 6.4196
+},
+{
+"topic_id": 19,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 6.3628
+},
+{
+"topic_id": 24,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 6.3468
+},
+{
+"topic_id": 33,
+"correct": false,
+"difficulty": "hard",
+"days_ago": 6.3343
+},
+{
+"topic_id": 22,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 6.296
+},
+{
+"topic_id": 19,
+"correct": false,
+"difficulty": "easy",
+"days_ago": 6.2387
+},
+{
+"topic_id": 1,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 6.2058
+},
+{
+"topic_id": 20,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 6.1935
+},
+{
+"topic_id": 33,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 6.1345
+},
+{
+"topic_id": 29,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 6.1305
+},
+{
+"topic_id": 32,
+"correct": true,
+"difficulty": "hard",
+"days_ago": 6.1185
+},
+{
+"topic_id": 33,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 6.1077
+},
+{
+"topic_id": 33,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 5.9611
+},
+{
+"topic_id": 23,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 5.7034
+},
+{
+"topic_id": 32,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 5.5825
+},
+{
+"topic_id": 23,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 5.4896
+},
+{
+"topic_id": 23,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 5.4892
+},
+{
+"topic_id": 24,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 5.4237
+},
+{
+"topic_id": 20,
+"correct": false,
+"difficulty": "easy",
+"days_ago": 5.4101
+},
+{
+"topic_id": 33,
+"correct": false,
+"difficulty": "hard",
+"days_ago": 5.2325
+},
+{
+"topic_id": 24,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 5.2091
+},
+{
+"topic_id": 25,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 5.0462
+},
+{
+"topic_id": 15,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 4.9672
+},
+{
+"topic_id": 20,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 4.9652
+},
+{
+"topic_id": 3,
+"correct": false,
+"difficulty": "hard",
+"days_ago": 4.9463
+},
+{
+"topic_id": 21,
+"correct": true,
+"difficulty": "hard",
+"days_ago": 4.9077
+},
+{
+"topic_id": 23,
+"correct": true,
+"difficulty": "hard",
+"days_ago": 4.8942
+},
+{
+"topic_id": 30,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 4.7749
+},
+{
+"topic_id": 24,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 4.3565
+},
+{
+"topic_id": 33,
+"correct": false,
+"difficulty": "hard",
+"days_ago": 4.0772
+},
+{
+"topic_id": 16,
+"correct": false,
+"difficulty": "easy",
+"days_ago": 4.0579
+},
+{
+"topic_id": 24,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 4.0099
+},
+{
+"topic_id": 32,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 3.8466
+},
+{
+"topic_id": 13,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 3.8173
+},
+{
+"topic_id": 33,
+"correct": false,
+"difficulty": "easy",
+"days_ago": 3.711
+},
+{
+"topic_id": 20,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 3.5534
+},
+{
+"topic_id": 23,
+"correct": true,
+"difficulty": "medium",
+"days_ago": 3.545
+},
+{
+"topic_id": 13,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 3.2697
+},
+{
+"topic_id": 32,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 2.8855
+},
+{
+"topic_id": 32,
+"correct": true,
+"difficulty": "hard",
+"days_ago": 2.8534
+},
+{
+"topic_id": 13,
+"correct": true,
+"difficulty": "hard",
+"days_ago": 2.8447
+},
+{
+"topic_id": 21,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 2.8305
+},
+{
+"topic_id": 21,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 2.6095
+},
+{
+"topic_id": 24,
+"correct": false,
+"difficulty": "easy",
+"days_ago": 2.3338
+},
+{
+"topic_id": 12,
+"correct": false,
+"difficulty": "medium",
+"days_ago": 2.2889
+},
+{
+"topic_id": 24,
+"correct": false,
+"difficulty": "hard",
+"days_ago": 2.1733
+},
+{
+"topic_id": 24,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 1.5921
+},
+{
+"topic_id": 12,
+"correct": true,
+"difficulty": "easy",
+"days_ago": 1.1924
+}
+],
+"resources": [
+{
+"id": 1,
+"topic_id": 1,
+"title": "Linear equations in one variable \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Linear+equations+in+one+variable",
+"type": "video"
+},
+{
+"id": 2,
+"topic_id": 1,
+"title": "Khan Academy \u2014 Math",
+"url": "https://www.khanacademy.org/math",
+"type": "article"
+},
+{
+"id": 3,
+"topic_id": 2,
+"title": "Linear equations in two variables \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Linear+equations+in+two+variables",
+"type": "video"
+},
+{
+"id": 4,
+"topic_id": 2,
+"title": "Khan Academy \u2014 Math",
+"url": "https://www.khanacademy.org/math",
+"type": "article"
+},
+{
+"id": 5,
+"topic_id": 3,
+"title": "Linear functions \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Linear+functions",
+"type": "video"
+},
+{
+"id": 6,
+"topic_id": 3,
+"title": "Khan Academy \u2014 Math",
+"url": "https://www.khanacademy.org/math",
+"type": "article"
+},
+{
+"id": 7,
+"topic_id": 4,
+"title": "Systems of two linear equations in two variables \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Systems+of+two+linear+equations+in+two+variables",
+"type": "video"
+},
+{
+"id": 8,
+"topic_id": 4,
+"title": "Khan Academy \u2014 Math",
+"url": "https://www.khanacademy.org/math",
+"type": "article"
+},
+{
+"id": 9,
+"topic_id": 5,
+"title": "Linear inequalities in one or two variables \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Linear+inequalities+in+one+or+two+variables",
+"type": "video"
+},
+{
+"id": 10,
+"topic_id": 5,
+"title": "Khan Academy \u2014 Math",
+"url": "https://www.khanacademy.org/math",
+"type": "article"
+},
+{
+"id": 11,
+"topic_id": 6,
+"title": "Equivalent expressions \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Equivalent+expressions",
+"type": "video"
+},
+{
+"id": 12,
+"topic_id": 6,
+"title": "Khan Academy \u2014 Math",
+"url": "https://www.khanacademy.org/math",
+"type": "article"
+},
+{
+"id": 13,
+"topic_id": 7,
+"title": "Nonlinear equations in one variable \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Nonlinear+equations+in+one+variable",
+"type": "video"
+},
+{
+"id": 14,
+"topic_id": 7,
+"title": "Khan Academy \u2014 Math",
+"url": "https://www.khanacademy.org/math",
+"type": "article"
+},
+{
+"id": 15,
+"topic_id": 8,
+"title": "Systems of nonlinear equations \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Systems+of+nonlinear+equations",
+"type": "video"
+},
+{
+"id": 16,
+"topic_id": 8,
+"title": "Khan Academy \u2014 Math",
+"url": "https://www.khanacademy.org/math",
+"type": "article"
+},
+{
+"id": 17,
+"topic_id": 9,
+"title": "Nonlinear functions \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Nonlinear+functions",
+"type": "video"
+},
+{
+"id": 18,
+"topic_id": 9,
+"title": "Khan Academy \u2014 Math",
+"url": "https://www.khanacademy.org/math",
+"type": "article"
+},
+{
+"id": 19,
+"topic_id": 10,
+"title": "Quadratic and exponential models \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Quadratic+and+exponential+models",
+"type": "video"
+},
+{
+"id": 20,
+"topic_id": 10,
+"title": "Khan Academy \u2014 Math",
+"url": "https://www.khanacademy.org/math",
+"type": "article"
+},
+{
+"id": 21,
+"topic_id": 11,
+"title": "Ratios, rates, and proportional relationships \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Ratios%2C+rates%2C+and+proportional+relationships",
+"type": "video"
+},
+{
+"id": 22,
+"topic_id": 11,
+"title": "Khan Academy \u2014 Math",
+"url": "https://www.khanacademy.org/math",
+"type": "article"
+},
+{
+"id": 23,
+"topic_id": 12,
+"title": "Percentages \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Percentages",
+"type": "video"
+},
+{
+"id": 24,
+"topic_id": 12,
+"title": "Khan Academy \u2014 Math",
+"url": "https://www.khanacademy.org/math",
+"type": "article"
+},
+{
+"id": 25,
+"topic_id": 13,
+"title": "One-variable data: center and spread \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+One-variable+data%3A+center+and+spread",
+"type": "video"
+},
+{
+"id": 26,
+"topic_id": 13,
+"title": "Khan Academy \u2014 Math",
+"url": "https://www.khanacademy.org/math",
+"type": "article"
+},
+{
+"id": 27,
+"topic_id": 14,
+"title": "Two-variable data: models and scatterplots \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Two-variable+data%3A+models+and+scatterplots",
+"type": "video"
+},
+{
+"id": 28,
+"topic_id": 14,
+"title": "Khan Academy \u2014 Math",
+"url": "https://www.khanacademy.org/math",
+"type": "article"
+},
+{
+"id": 29,
+"topic_id": 15,
+"title": "Probability and conditional probability \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Probability+and+conditional+probability",
+"type": "video"
+},
+{
+"id": 30,
+"topic_id": 15,
+"title": "Khan Academy \u2014 Math",
+"url": "https://www.khanacademy.org/math",
+"type": "article"
+},
+{
+"id": 31,
+"topic_id": 16,
+"title": "Inference from sample statistics and margin of error \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Inference+from+sample+statistics+and+margin+of+error",
+"type": "video"
+},
+{
+"id": 32,
+"topic_id": 16,
+"title": "Khan Academy \u2014 Math",
+"url": "https://www.khanacademy.org/math",
+"type": "article"
+},
+{
+"id": 33,
+"topic_id": 17,
+"title": "Area and volume \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Area+and+volume",
+"type": "video"
+},
+{
+"id": 34,
+"topic_id": 17,
+"title": "Khan Academy \u2014 Math",
+"url": "https://www.khanacademy.org/math",
+"type": "article"
+},
+{
+"id": 35,
+"topic_id": 18,
+"title": "Lines, angles, and triangles \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Lines%2C+angles%2C+and+triangles",
+"type": "video"
+},
+{
+"id": 36,
+"topic_id": 18,
+"title": "Khan Academy \u2014 Math",
+"url": "https://www.khanacademy.org/math",
+"type": "article"
+},
+{
+"id": 37,
+"topic_id": 19,
+"title": "Right triangles and trigonometry \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Right+triangles+and+trigonometry",
+"type": "video"
+},
+{
+"id": 38,
+"topic_id": 19,
+"title": "Khan Academy \u2014 Math",
+"url": "https://www.khanacademy.org/math",
+"type": "article"
+},
+{
+"id": 39,
+"topic_id": 20,
+"title": "Circles \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Circles",
+"type": "video"
+},
+{
+"id": 40,
+"topic_id": 20,
+"title": "Khan Academy \u2014 Math",
+"url": "https://www.khanacademy.org/math",
+"type": "article"
+},
+{
+"id": 41,
+"topic_id": 21,
+"title": "Central ideas and details \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Central+ideas+and+details",
+"type": "video"
+},
+{
+"id": 42,
+"topic_id": 21,
+"title": "Khan Academy \u2014 Reading & grammar",
+"url": "https://www.khanacademy.org/ela",
+"type": "article"
+},
+{
+"id": 43,
+"topic_id": 22,
+"title": "Command of evidence: textual \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Command+of+evidence%3A+textual",
+"type": "video"
+},
+{
+"id": 44,
+"topic_id": 22,
+"title": "Khan Academy \u2014 Reading & grammar",
+"url": "https://www.khanacademy.org/ela",
+"type": "article"
+},
+{
+"id": 45,
+"topic_id": 23,
+"title": "Command of evidence: quantitative \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Command+of+evidence%3A+quantitative",
+"type": "video"
+},
+{
+"id": 46,
+"topic_id": 23,
+"title": "Khan Academy \u2014 Reading & grammar",
+"url": "https://www.khanacademy.org/ela",
+"type": "article"
+},
+{
+"id": 47,
+"topic_id": 24,
+"title": "Inferences \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Inferences",
+"type": "video"
+},
+{
+"id": 48,
+"topic_id": 24,
+"title": "Khan Academy \u2014 Reading & grammar",
+"url": "https://www.khanacademy.org/ela",
+"type": "article"
+},
+{
+"id": 49,
+"topic_id": 25,
+"title": "Words in context \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Words+in+context",
+"type": "video"
+},
+{
+"id": 50,
+"topic_id": 25,
+"title": "Khan Academy \u2014 Reading & grammar",
+"url": "https://www.khanacademy.org/ela",
+"type": "article"
+},
+{
+"id": 51,
+"topic_id": 26,
+"title": "Text structure and purpose \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Text+structure+and+purpose",
+"type": "video"
+},
+{
+"id": 52,
+"topic_id": 26,
+"title": "Khan Academy \u2014 Reading & grammar",
+"url": "https://www.khanacademy.org/ela",
+"type": "article"
+},
+{
+"id": 53,
+"topic_id": 27,
+"title": "Cross-text connections \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Cross-text+connections",
+"type": "video"
+},
+{
+"id": 54,
+"topic_id": 27,
+"title": "Khan Academy \u2014 Reading & grammar",
+"url": "https://www.khanacademy.org/ela",
+"type": "article"
+},
+{
+"id": 55,
+"topic_id": 28,
+"title": "Rhetorical synthesis \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Rhetorical+synthesis",
+"type": "video"
+},
+{
+"id": 56,
+"topic_id": 28,
+"title": "Khan Academy \u2014 Reading & grammar",
+"url": "https://www.khanacademy.org/ela",
+"type": "article"
+},
+{
+"id": 57,
+"topic_id": 29,
+"title": "Transitions \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Transitions",
+"type": "video"
+},
+{
+"id": 58,
+"topic_id": 29,
+"title": "Khan Academy \u2014 Reading & grammar",
+"url": "https://www.khanacademy.org/ela",
+"type": "article"
+},
+{
+"id": 59,
+"topic_id": 30,
+"title": "Precision and concision \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Precision+and+concision",
+"type": "video"
+},
+{
+"id": 60,
+"topic_id": 30,
+"title": "Khan Academy \u2014 Reading & grammar",
+"url": "https://www.khanacademy.org/ela",
+"type": "article"
+},
+{
+"id": 61,
+"topic_id": 31,
+"title": "Sentence boundaries and punctuation \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Sentence+boundaries+and+punctuation",
+"type": "video"
+},
+{
+"id": 62,
+"topic_id": 31,
+"title": "Khan Academy \u2014 Reading & grammar",
+"url": "https://www.khanacademy.org/ela",
+"type": "article"
+},
+{
+"id": 63,
+"topic_id": 32,
+"title": "Subject-verb and pronoun agreement \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Subject-verb+and+pronoun+agreement",
+"type": "video"
+},
+{
+"id": 64,
+"topic_id": 32,
+"title": "Khan Academy \u2014 Reading & grammar",
+"url": "https://www.khanacademy.org/ela",
+"type": "article"
+},
+{
+"id": 65,
+"topic_id": 33,
+"title": "Verb tense and form \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Verb+tense+and+form",
+"type": "video"
+},
+{
+"id": 66,
+"topic_id": 33,
+"title": "Khan Academy \u2014 Reading & grammar",
+"url": "https://www.khanacademy.org/ela",
+"type": "article"
+},
+{
+"id": 67,
+"topic_id": 34,
+"title": "Modifiers and parallel structure \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Modifiers+and+parallel+structure",
+"type": "video"
+},
+{
+"id": 68,
+"topic_id": 34,
+"title": "Khan Academy \u2014 Reading & grammar",
+"url": "https://www.khanacademy.org/ela",
+"type": "article"
+},
+{
+"id": 69,
+"topic_id": 35,
+"title": "Possessives and apostrophes \u2014 video walkthroughs",
+"url": "https://www.youtube.com/results?search_query=digital+SAT+Possessives+and+apostrophes",
+"type": "video"
+},
+{
+"id": 70,
+"topic_id": 35,
+"title": "Khan Academy \u2014 Reading & grammar",
+"url": "https://www.khanacademy.org/ela",
+"type": "article"
+}
+]
+}

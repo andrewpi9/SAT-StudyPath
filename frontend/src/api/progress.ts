@@ -1,3 +1,5 @@
+import * as demoApi from '../demo/api'
+import { DEMO } from '../lib/demo'
 import { api } from './client'
 
 export interface ProgressPoint {
@@ -13,5 +15,5 @@ export interface Progress {
 }
 
 export function getProgress(days = 30): Promise<Progress> {
-  return api.get<Progress>(`/progress?days=${days}`)
+  return DEMO ? demoApi.getProgress(days) : api.get<Progress>(`/progress?days=${days}`)
 }

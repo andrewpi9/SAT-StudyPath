@@ -1,3 +1,5 @@
+import * as demoApi from '../demo/api'
+import { DEMO } from '../lib/demo'
 import { api } from './client'
 
 export interface User {
@@ -26,5 +28,5 @@ export function login(email: string, password: string): Promise<AuthResponse> {
 }
 
 export function getMe(): Promise<User> {
-  return api.get<User>('/auth/me')
+  return DEMO ? demoApi.getMe() : api.get<User>('/auth/me')
 }
