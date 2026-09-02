@@ -1,169 +1,121 @@
 # SAT StudyPath
 
-**A personalized SAT study-path generator.** It takes a student's practice
-results *by topic* and produces a ranked "what to study next" plan using an
-actual adaptive algorithm — recency-weighted mastery scoring, forgetting-curve
-decay, and real digital-SAT topic-frequency weighting.
+SAT StudyPath takes your practice results by topic and tells you what to study next. It ranks every skill by how much score you could lose right now, and it explains each choice in plain English.
+
+The ranking runs on a real algorithm, not a checklist. It tracks how well you know each skill, fades that number over time when you stop practicing, and weights everything by how often the skill shows up on the test.
 
 <p align="center">
-  <img src="docs/study-plan.png" alt="Today's Study Plan — a ranked list of skills with a plain-English reason for each" width="49%">
-  <img src="docs/dashboard-dark.png" alt="Mastery Dashboard — a readiness trend and a heatmap of every skill coloured by decayed mastery" width="49%">
+  <img src="docs/study_plan.png" alt="Today's Study Plan, a ranked list of skills with a plain English reason for each" width="49%">
+  <img src="docs/dashboard_dark.png" alt="Mastery Dashboard, a readiness trend and a heatmap of every skill colored by decayed mastery" width="49%">
 </p>
 
 ## Why I built this
 
-I ran an SAT tutoring channel — 60+ videos, 5M+ views — and the question I got
-most often wasn't *"how do I solve this?"* but **"what should I study next?"**
+I ran an SAT tutoring channel. Sixty plus videos, over five million views. The question students asked most was never "how do I solve this problem." It was "what should I study next?"
 
-Most prep tools answer that with a static checklist or a raw accuracy number.
-Neither captures the two things that actually move a score:
+Most prep tools answer that badly. They give you a checklist or a raw accuracy percentage. Neither one handles the two things that actually move a score.
 
-1. **A skill fades if you don't practise it.** Nailing linear functions three
-   weeks ago and not touching them since is *not* the same as nailing them
-   yesterday — but an all-time accuracy stat treats them identically.
-2. **Not all topics are worth the same.** Missing 20% of linear-equation
-   questions costs far more points than missing 20% of a topic that shows up
-   twice a test.
+Skills fade. You nailed linear functions three weeks ago and have not touched them since. That is not the same as nailing them yesterday. Your lifetime accuracy number treats both cases as identical.
 
-StudyPath does it properly. The recommendation engine
-([`backend/app/algorithm/`](backend/app/algorithm/)) is a real piece of
-software — five modules of pure, unit-tested functions — not a wrapper around a
-spreadsheet. The [How the recommendation algorithm
-works](#how-the-recommendation-algorithm-works) section below is the part worth
-reading.
+Topics are not worth the same. Missing 20 percent of linear equation questions costs you far more than missing 20 percent of a topic that shows up twice per test.
 
-Multi-user (JWT auth). Three pages: **Study Plan** (the ranked list, with
-per-topic links and a jump to practice), **Dashboard** (readiness trend + a
-mastery heatmap), and **Log Attempt** (one at a time, or a CSV of a whole
-practice session).
-
-## Architecture
-
-```
- React + Vite + TypeScript            FastAPI                     SQLAlchemy 2.0
- ─────────────────────────  ──HTTP──▶  ───────────────────────▶   ─────────────▶  SQLite
- Study Plan · Dashboard ·             app/routers/   (thin)                       (Postgres:
- Log Attempt   (Tailwind)             app/services/  (ORM ⇄ algorithm glue)        one line
-                                      app/algorithm/ (the engine — no DB,          in config)
-                                                      no clock, pure functions)
-```
-
-| Layer | What lives there | Why it's separate |
-|---|---|---|
-| [`app/algorithm/`](backend/app/algorithm/) | `mastery` · `decay` · `priority` · `readiness` · `progress` | Pure functions — take plain values and an explicit `now`, return numbers/dataclasses. Tested against hand-computed values with no database or server running. |
-| [`app/services/`](backend/app/services/) | `record_attempt` (the one write path), `topic_snapshots` (the one ORM→algorithm projection), `seeding`, `bulk_import`, `progress`, `users` | Both the seed script and `POST /api/attempts` fold attempts into mastery through *one* function scoped to one user, so the update rule exists in exactly one place. |
-| [`app/routers/`](backend/app/routers/) | `auth` · `topics` · `attempts` · `mastery` · `study_plan` · `progress` · `resources` | Thin HTTP handlers; every data route depends on `get_current_user` ([`app/auth.py`](backend/app/auth.py)). |
-| [`frontend/src/`](frontend/src/) | `pages/` · `components/` · `api/` (typed fetch client) · `auth/` (context + token store) | Talks to the API over a relative `/api` path; Vite proxies it in dev. |
+StudyPath handles both. The engine lives in `backend/app/algorithm/`. It is five modules of pure functions with a test suite that works the math out by hand. If you read one section of this file, read the next one.
 
 ## How the recommendation algorithm works
 
-Three ideas, applied in order. Constants below are the live values from
-[`app/algorithm/`](backend/app/algorithm/).
+Three ideas, applied in order. The numbers below are the live constants from the code.
 
-### 1. Mastery is an exponentially weighted moving average — not lifetime accuracy
+### Mastery is a moving average, not lifetime accuracy
 
-A student's skill *changes over time* — that's the whole point of studying. A
-plain average of every attempt they've ever made lets a rough first week drag
-down a topic they've since mastered. So each attempt nudges the estimate a fixed
-fraction of the way toward that attempt's outcome:
+Your skill changes as you study. That is the point. A plain average of every attempt you have ever made lets a rough first week hold down a topic you have since mastered.
+
+So each attempt nudges the estimate a fixed fraction of the way toward that result.
 
 ```
-outcome      = 1.0 if correct else 0.0
-new_mastery  = old_mastery + 0.3 * (outcome - old_mastery)      # learning rate 0.3
+outcome     = 1.0 if correct else 0.0
+new_mastery = old_mastery + 0.3 * (outcome - old_mastery)   # learning rate 0.3
 ```
 
-The influence of any one attempt decays geometrically as newer attempts arrive —
-recent performance dominates without old attempts being thrown away. A topic with
-no attempts starts at **0.4** (slightly below neutral: with no evidence, assume
-*not yet competent*), and a separate `confidence` value climbs to 1.0 over the
-first five attempts so the UI can distinguish "34%" from "34%, but we've only
-seen it twice".
+Recent attempts carry the most weight. Old ones fade but never get dropped. A topic with no attempts starts at 0.4, a little below the middle, because with no evidence you should assume you are not ready. A separate confidence value climbs to 1.0 over your first five attempts. That lets the interface tell "34 percent" apart from "34 percent, and we have only seen two questions."
 
-### 2. Forgetting-curve decay — applied when the number is read, not when it's stored
+### Forgetting curve decay, applied when the app reads the number
 
-Ebbinghaus's forgetting curve models retention as exponential decay over elapsed
-time. StudyPath applies exactly that at read time:
+Memory decays over time. Ebbinghaus modeled it as exponential decay. StudyPath applies the same thing.
 
 ```
 decayed_mastery = mastery_score * exp(-0.02 * days_since_practice)
 ```
 
-A week untouched costs ~13% of a skill; a month, ~45%. This is deliberately
-**not** persisted — the stored score always means "how well you did when you last
-practised," and decay is a lens laid over it. Practising again writes a fresh
-score *and* resets the clock, so a quick review session restores most of the lost
-ground.
+A week untouched costs about 13 percent of a skill. A month costs about 45 percent.
 
-### 3. Priority = points at risk + a nudge toward blind spots
+The stored score never moves because of decay. It always means "how well you did the last time you practiced." Decay is a lens the app lays over it at read time. Practice the topic again and you write a fresh score and reset the clock, so a short review session wins most of that ground back.
+
+### Priority is points at risk plus a nudge toward blind spots
 
 ```
-urgency          = 1 - decayed_mastery
+urgency           = 1 - decayed_mastery
 exploration_bonus = 0.15 / (1 + attempts_count)
-priority_score    = frequency_weight * urgency  +  exploration_bonus
+priority_score    = frequency_weight * urgency + exploration_bonus
 ```
 
-`frequency_weight * urgency` is the **expected-points-at-risk** term: a shaky
-skill that's all over the test outranks a shaky skill that barely appears.
-(`frequency_weight` is each skill's share of its section — seeded from College
-Board's published domain weightings plus my own read of the question mix across
-released tests; see [`taxonomy.py`](backend/app/data/taxonomy.py).)
+`frequency_weight * urgency` is the expected points at risk. A shaky skill that covers a lot of the test beats a shaky skill that barely appears. `frequency_weight` is each skill's share of its section. I seeded it from College Board's published domain weights plus my own read of the question mix across released tests. It is in `backend/app/data/taxonomy.py`.
 
-The **exploration bonus** is a separate additive term so a never-attempted topic
-still surfaces even with zero evidence it's weak — you can't improve what you
-never diagnose. It's 0.15 at zero attempts and decays as `1/(1+n)`, so it's
-negligible within a few reps.
+The exploration bonus is a separate term. It surfaces a topic you have never touched, even though there is no evidence it is weak. You cannot fix a blind spot you never find. The bonus is 0.15 at zero attempts and drops fast once you start practicing.
 
-Each recommendation ships with a plain-English reason string built from the same
-numbers:
+Every recommendation comes with a reason string built from the same numbers.
 
-> *Mastery 36% (decayed from 47%) · appears in ~9% of the Reading & Writing
-> section · last practiced 13 days ago*
+> Mastery 36 percent, down from 47 percent. Shows up in about 9 percent of the Reading and Writing section. Last practiced 13 days ago.
 
-### The property I care about: spaced repetition falls out for free
+### Spaced repetition falls out of this for free
 
-Take a skill sitting at 90% mastery.
+Take a skill sitting at 90 percent mastery.
 
-| State | decayed mastery | priority score |
-|---|---|---|
-| practised today | 90% | ≈ 0.025 |
-| untouched for 30 days | 49% | ≈ 0.057 |
+Practice it today and the decayed mastery stays at 90 percent, so the priority score is about 0.025. Leave it alone for 30 days and the decayed mastery drops to 49 percent, so the priority score climbs to about 0.057.
 
-The priority **more than doubles** with no new data — purely from decay. A fresh
-skill at 62% mastery scores ≈ 0.047, so after a month of neglect the
-strong-but-stale skill climbs back *above* the mediocre-but-fresh one. Nobody
-coded "remind me to review things"; it emerges from decay + urgency. That
-behaviour has a dedicated test:
-[`test_high_mastery_but_stale_is_pushed_back_up_by_decay`](backend/app/tests/test_mastery_engine.py).
+The priority more than doubles with no new data. That is pure decay. A fresh skill at 62 percent mastery scores about 0.047, so after a month of neglect the strong stale skill passes the mediocre fresh one. Nobody wrote a "remind me to review" rule. It comes straight out of decay and urgency. There is a test for it, `test_high_mastery_but_stale_is_pushed_back_up_by_decay`.
 
-### The readiness trend is reconstructed, not stored
+### The readiness trend is rebuilt, not stored
 
-`GET /api/progress` doesn't read a table of daily snapshots — there isn't one. It
-takes the whole attempt history, replays the EWMA forward, and snapshots the
-frequency-weighted, decay-adjusted readiness at the end of each day
-([`app/algorithm/progress.py`](backend/app/algorithm/progress.py), O(attempts +
-days)). A downward drift in the chart during a study break is the forgetting
-curve pulling against zero new practice — the same mechanism, viewed over time.
+`GET /api/progress` does not read a table of daily snapshots. There is no such table. It takes your whole attempt history, replays the moving average forward, and records the readiness adjusted for decay at the end of each day. See `backend/app/algorithm/progress.py`. It runs in time proportional to your attempts plus the days in the range.
+
+A dip in the chart during a study break is the forgetting curve working against zero new practice. Same mechanism, seen over time.
+
+## Architecture
+
+React, Vite, and TypeScript on the frontend. FastAPI and SQLAlchemy on the backend. SQLite for local dev, Postgres in production, one line in config to switch.
+
+The code splits into layers.
+
+`backend/app/algorithm/` holds the engine. Every function is pure. It takes plain values and an explicit "now" and returns a number or a dataclass. No database, no clock, no server needed to test it. The modules are mastery, decay, priority, readiness, and progress.
+
+`backend/app/services/` connects the database to the algorithm. Two functions matter. `record_attempt` is the only write path, so the update rule lives in exactly one place. `topic_snapshots` is the only projection from database rows into algorithm input.
+
+`backend/app/routers/` holds thin HTTP handlers. Every route that touches your data depends on `get_current_user` from `backend/app/auth.py`.
+
+`frontend/src/` has pages, components, an api folder with a typed fetch client, and an auth folder with the token store.
+
+Multiple people can sign up. Auth uses JWT bearer tokens. There are three pages. Study Plan is the ranked list with links per topic and a jump straight to practice. Dashboard shows the readiness trend and the mastery heatmap. Log Attempt takes one question at a time or a CSV of a whole session.
 
 ## Running it
 
-Clean clone to running app in a couple of minutes. Requires **Python 3.11+**
-(3.13 recommended) and **Node 20+**.
+You need Python 3.11 or newer and Node 20 or newer. A clean clone runs in a couple of minutes.
 
-### Backend — `http://localhost:8000`
+Backend, at `http://localhost:8000`.
 
 ```bash
 cd backend
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
-python -m app.seed                # create the DB + the demo user's ~4-week history
-uvicorn app.main:app --reload     # API + interactive docs at /docs
+python -m app.seed
+uvicorn app.main:app --reload
 ```
 
-The seed creates **`demo@studypath.app` / `demo-password`** — or hit *Try the
-demo account* on the login screen. New sign-ups start with a clean slate.
+The seed creates the demo account. Email `demo@studypath.app`, password `demopassword`. Or click "Try the demo account" on the login screen. A new signup starts empty.
 
-<details><summary>Prefer <a href="https://docs.astral.sh/uv/">uv</a>?</summary>
+You can use uv instead.
+
+<details><summary>uv commands</summary>
 
 ```bash
 cd backend
@@ -173,78 +125,63 @@ uv run uvicorn app.main:app --reload
 ```
 </details>
 
-### Frontend — `http://localhost:5173`
+Frontend, at `http://localhost:5173`.
 
 ```bash
 cd frontend
 npm install
-npm run dev                       # proxies /api to :8000
+npm run dev
 ```
 
-Nothing to seed by hand if you skip `python -m app.seed` — the empty state has a
-**Load demo data** button that hits the (dev-only) seed endpoint.
-
-### Tests
+Tests.
 
 ```bash
-cd backend && pytest               # 117 tests
+cd backend && pytest
 ```
 
-[`app/tests/test_mastery_engine.py`](backend/app/tests/test_mastery_engine.py) is
-the one to read: 52 cases with the arithmetic worked out in comments next to each
-assertion, covering every ranking edge case (never-attempted surfaces via
-exploration; perfect-and-fresh sinks; stale-and-strong resurfaces; ties break by
-frequency weight).
+That runs 118 tests. Read `backend/app/tests/test_mastery_engine.py` first. It has 52 cases with the arithmetic written out in comments next to each assertion. They cover every ranking edge case. A topic you never attempted still surfaces through exploration. A topic you aced today sinks. A strong topic you have not touched in weeks comes back up. Ties break by frequency weight.
 
 ## API
 
-All data routes need a bearer token from `/api/auth/login` or `/api/auth/signup`;
-`/api/topics` and `/api/resources/{id}` are public.
+Every data route needs a bearer token from `/api/auth/login` or `/api/auth/signup`. `/api/topics` and `/api/resources/{topic_id}` are public.
 
-| method | path | purpose |
-|---|---|---|
-| `POST` | `/api/auth/signup` · `/api/auth/login` | returns `{access_token, user}` |
-| `GET`  | `/api/topics` | the full 35-skill taxonomy |
-| `GET`  | `/api/mastery` | every skill's mastery / decay / confidence + readiness roll-up |
-| `GET`  | `/api/study-plan?limit=5` | ranked recommendations, each with a reason string and study links |
-| `GET`  | `/api/progress?days=30` | readiness per day, replayed from history |
-| `GET`  | `/api/resources/{topic_id}` | study links for one topic |
-| `POST` | `/api/attempts` | log one attempt `{topic_id, correct, time_taken_seconds, difficulty}`; returns the updated mastery |
-| `POST` | `/api/attempts/bulk` | import a CSV of attempts (`GET /api/attempts/template.csv` for the format) |
-| `POST` | `/api/topics/seed` | dev only — (re)generate a synthetic history for the current user |
+`GET /api/topics` returns the full taxonomy of 35 skills.
 
-## Data & content policy
+`GET /api/mastery` returns every skill's mastery, decay, and confidence, plus the readiness rollup.
 
-No real College Board question text, answer choices, or passages appear anywhere
-in this project — **only skill tags, correctness, timing, and difficulty**. The
-seed script generates entirely synthetic attempts (`topic=Linear Functions,
-correct=false, 47s`, never any question content). Topic-frequency weights are
-approximate and tutor-informed, not scraped from any proprietary source.
+`GET /api/study-plan?limit=5` returns the ranked recommendations with reason strings and study links.
+
+`GET /api/progress?days=30` returns readiness per day, replayed from your history.
+
+`GET /api/resources/{topic_id}` returns study links for one topic.
+
+`POST /api/attempts` logs one attempt and returns the updated mastery.
+
+`POST /api/attempts/bulk` imports a CSV. Get the format from `GET /api/attempts/template.csv`.
+
+`POST /api/topics/seed` regenerates a synthetic history for the current user. Dev only.
+
+## Data and content policy
+
+No real College Board question text, answer choices, or passages appear anywhere in this project. The database stores skill tags, correctness, timing, and difficulty. Nothing else.
+
+The seed script writes synthetic attempts. A row reads `topic=Linear Functions, correct=false, 47s`. There is never any question content. The frequency weights are rough and come from my tutoring experience, not from anything proprietary.
 
 ## Deployment
 
-Config is in the repo — [`render.yaml`](render.yaml) (FastAPI web service + free
-Postgres), [`backend/Dockerfile`](backend/Dockerfile), and
-[`frontend/vercel.json`](frontend/vercel.json) (SPA rewrites + `/api` proxy).
-Swapping SQLite → Postgres is just `DATABASE_URL`; the psycopg driver is selected
-automatically (`postgres://` URLs are normalised in
-[`config.py`](backend/app/config.py)) and lives in
-[`requirements-prod.txt`](backend/requirements-prod.txt) so local dev stays lean.
-`SEED_DEMO_ON_STARTUP=true` recreates the demo account on first boot.
+The config is in the repo. `render.yaml` sets up a FastAPI web service and a free Postgres database. `backend/Dockerfile` builds the API. `frontend/vercel.json` handles SPA routing and proxies `/api` to the backend.
 
-1. **API** — Render → New → Blueprint → this repo. It provisions the web service
-   + Postgres and generates `JWT_SECRET`; set `CORS_ORIGINS` to the frontend URL
-   once it exists.
-2. **Frontend** — Vercel → import repo, root directory `frontend`. Edit the
-   `/api` rewrite in `vercel.json` to point at the Render URL.
+Moving from SQLite to Postgres means changing `DATABASE_URL`. The psycopg driver gets picked automatically. Postgres URLs get normalized in `backend/app/config.py`. The driver sits in `backend/requirements-prod.txt` so a local install stays small. Set `SEED_DEMO_ON_STARTUP` to true and the app recreates the demo account on first boot.
+
+1. API. On Render, choose New, then Blueprint, then this repo. It builds the web service and the database and generates `JWT_SECRET`. Set `CORS_ORIGINS` to the frontend URL once you have it.
+2. Frontend. On Vercel, import the repo and set the root directory to `frontend`. Edit the `/api` rewrite in `vercel.json` to point at the Render URL.
 
 ## What I'd build next
 
-- **Calibrated scaled score** — map the 0–1 readiness number onto the 400–1600
-  scale using real concordance data.
-- **Adaptive difficulty in the plan** — recommend *which* difficulty band to
-  practise per topic from the per-difficulty accuracy already being logged.
-- **Refresh tokens** — the access token is currently long-lived; add a rotating
-  refresh token and shorten it.
-- **Alembic migrations** — `create_all` is fine for a fresh deploy; a real
-  multi-tenant service needs versioned schema changes.
+A calibrated scaled score. Map the 0 to 1 readiness number onto the 400 to 1600 range using real concordance data.
+
+Refresh tokens. The access token lasts a week right now. Add a rotating refresh token and cut the lifetime.
+
+Adaptive difficulty. Recommend which difficulty band to practice per topic, using the accuracy data the app already logs.
+
+Alembic migrations. `create_all` works for a fresh deploy. A service with real users needs versioned schema changes.

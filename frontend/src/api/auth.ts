@@ -14,7 +14,7 @@ export interface AuthResponse {
 
 export const DEMO_CREDENTIALS = {
   email: 'demo@studypath.app',
-  password: 'demo-password',
+  password: 'demopassword',
 }
 
 export function signup(email: string, password: string): Promise<AuthResponse> {

@@ -6,7 +6,7 @@ Run from the ``backend/`` directory:
     python -m app.seed --seed 7       # a different but still reproducible history
     python -m app.seed --attempts 300 # scale the number of attempts
 
-Log in as  demo@studypath.app / demo-password  to see it. The generation logic
+Log in as  demo@studypath.app / demopassword  to see it. The generation logic
 lives in ``app.services.seeding`` (shared with ``POST /api/topics/seed``); this
 module is the CLI wrapper plus a readable summary.
 """

@@ -9,7 +9,7 @@ from app.auth import hash_password, verify_password
 from app.models.user import User
 
 DEMO_EMAIL = "demo@studypath.app"
-DEMO_PASSWORD = "demo-password"
+DEMO_PASSWORD = "demopassword"
 
 
 def get_user_by_email(db: Session, email: str) -> User | None:
