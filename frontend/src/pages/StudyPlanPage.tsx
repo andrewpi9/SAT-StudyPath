@@ -41,6 +41,22 @@ export default function StudyPlanPage() {
                           </span>
                         </div>
                         <p className="mt-1 text-sm text-slate-600">{item.reason}</p>
+                        {item.resources.length > 0 && (
+                          <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs">
+                            {item.resources.map((resource) => (
+                              <a
+                                key={resource.id}
+                                href={resource.url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-slate-500 hover:text-indigo-600 hover:underline"
+                              >
+                                {resource.type === 'video' ? '▸ ' : '· '}
+                                {resource.type === 'video' ? 'Video walkthroughs' : resource.title}
+                              </a>
+                            ))}
+                          </div>
+                        )}
                         <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
                           <MasteryBar
                             mastery={item.decayed_mastery}

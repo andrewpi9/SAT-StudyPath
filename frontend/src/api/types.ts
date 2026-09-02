@@ -32,11 +32,20 @@ export interface MasteryOverview {
   topics: TopicMastery[]
 }
 
+export interface Resource {
+  id: number
+  topic_id: number
+  title: string
+  url: string
+  type: 'video' | 'article'
+}
+
 export interface StudyPlanItem extends TopicMastery {
   urgency: number
   exploration_bonus: number
   priority_score: number
   reason: string
+  resources: Resource[]
 }
 
 export interface StudyPlan {

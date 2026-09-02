@@ -15,7 +15,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
 from app.database import init_db
-from app.routers import attempts, mastery, progress, study_plan, topics
+from app.routers import attempts, mastery, progress, resources, study_plan, topics
 
 
 @asynccontextmanager
@@ -43,6 +43,7 @@ def create_app() -> FastAPI:
     app.include_router(mastery.router)
     app.include_router(study_plan.router)
     app.include_router(progress.router)
+    app.include_router(resources.router)
 
     return app
 

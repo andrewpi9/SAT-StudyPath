@@ -5,6 +5,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict
 
 from app.enums import Section
+from app.schemas.resource import ResourceOut
 
 
 class StudyPlanItemOut(BaseModel):
@@ -30,6 +31,7 @@ class StudyPlanItemOut(BaseModel):
     exploration_bonus: float
     priority_score: float
     reason: str
+    resources: list[ResourceOut] = []
 
 
 class StudyPlanOut(BaseModel):

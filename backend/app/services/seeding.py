@@ -24,6 +24,7 @@ from app.models.mastery import TopicMastery
 from app.models.resource import Resource
 from app.models.topic import Topic
 from app.services.attempts import record_attempt
+from app.services.resources import load_resources
 from app.services.topics import load_taxonomy
 from app.utils.time import utcnow
 
@@ -212,6 +213,7 @@ def seed_database(
     if reset:
         clear_practice_data(db)
     created = load_taxonomy(db)
+    load_resources(db)
     attempts = generate_history(db, random.Random(rng_seed), target_attempts=target_attempts)
     db.commit()
     return SeedResult(topics_created=len(created), attempts_created=attempts, reset=reset)

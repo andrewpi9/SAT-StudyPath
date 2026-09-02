@@ -9,6 +9,7 @@ from app.schemas.attempt import (
 )
 from app.schemas.mastery import MasteryOverviewOut, TopicMasteryOut
 from app.schemas.progress import ProgressOut, ReadinessPointOut
+from app.schemas.resource import ResourceOut
 from app.schemas.seed import SeedRequest, SeedResultOut
 from app.schemas.study_plan import StudyPlanItemOut, StudyPlanOut
 from app.schemas.topic import TopicOut
@@ -22,6 +23,7 @@ __all__ = [
     "MasteryOverviewOut",
     "ProgressOut",
     "ReadinessPointOut",
+    "ResourceOut",
     "SeedRequest",
     "SeedResultOut",
     "StudyPlanItemOut",

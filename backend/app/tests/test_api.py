@@ -230,6 +230,35 @@ class TestMasteryOverview:
 
 
 # ---------------------------------------------------------------------------
+# GET /api/resources/{topic_id}
+# ---------------------------------------------------------------------------
+
+
+class TestResources:
+    def test_every_topic_has_resources(self, seeded_client, db):
+        topic_id = _a_topic_id(db)
+        body = seeded_client.get(f"/api/resources/{topic_id}").json()
+        assert len(body) == 2
+        assert {r["type"] for r in body} == {"video", "article"}
+        assert all(r["url"].startswith("https://") for r in body)
+        assert all(r["topic_id"] == topic_id for r in body)
+
+    def test_unknown_topic_is_404(self, seeded_client):
+        assert seeded_client.get("/api/resources/999999").status_code == 404
+
+    def test_seeding_twice_does_not_duplicate(self, client, db):
+        seed_database(db, rng_seed=1)
+        seed_database(db, rng_seed=1)  # reset=True wipes + reloads
+        topic_id = _a_topic_id(db)
+        assert len(client.get(f"/api/resources/{topic_id}").json()) == 2
+
+    def test_study_plan_items_carry_their_resources(self, seeded_client):
+        items = seeded_client.get("/api/study-plan").json()["items"]
+        assert all(len(item["resources"]) == 2 for item in items)
+        assert items[0]["resources"][0]["title"]
+
+
+# ---------------------------------------------------------------------------
 # GET /api/progress
 # ---------------------------------------------------------------------------
 
