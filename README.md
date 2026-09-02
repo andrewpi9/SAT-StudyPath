@@ -7,7 +7,7 @@ decay, and real digital-SAT topic-frequency weighting — not a static checklist
 
 <p align="center">
   <img src="docs/study-plan.png" alt="Today's Study Plan — a ranked list of skills with a plain-English reason for each" width="49%">
-  <img src="docs/dashboard.png" alt="Mastery Dashboard — a heatmap of every skill coloured by decayed mastery" width="49%">
+  <img src="docs/dashboard-dark.png" alt="Mastery Dashboard — a readiness trend and a heatmap of every skill coloured by decayed mastery" width="49%">
 </p>
 
 ## Why I built this

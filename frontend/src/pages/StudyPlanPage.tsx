@@ -30,17 +30,21 @@ export default function StudyPlanPage() {
                 <li key={item.topic_id}>
                   <Card className="p-4">
                     <div className="flex items-start gap-3">
-                      <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-100 text-xs font-semibold text-slate-600">
+                      <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-100 text-xs font-semibold text-slate-600 dark:bg-slate-800 dark:text-slate-300">
                         {index + 1}
                       </span>
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-baseline justify-between gap-x-3">
-                          <h2 className="font-medium text-slate-900">{item.skill_name}</h2>
-                          <span className="text-xs text-slate-400">
+                          <h2 className="font-medium text-slate-900 dark:text-slate-100">
+                            {item.skill_name}
+                          </h2>
+                          <span className="text-xs text-slate-400 dark:text-slate-500">
                             {SECTION_LABEL[item.section]} · {item.domain}
                           </span>
                         </div>
-                        <p className="mt-1 text-sm text-slate-600">{item.reason}</p>
+                        <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
+                          {item.reason}
+                        </p>
                         {item.resources.length > 0 && (
                           <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs">
                             {item.resources.map((resource) => (
@@ -49,7 +53,7 @@ export default function StudyPlanPage() {
                                 href={resource.url}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="text-slate-500 hover:text-indigo-600 hover:underline"
+                                className="text-slate-500 hover:text-indigo-600 hover:underline dark:text-slate-400 dark:hover:text-indigo-400"
                               >
                                 {resource.type === 'video' ? '▸ ' : '· '}
                                 {resource.type === 'video' ? 'Video walkthroughs' : resource.title}
@@ -64,7 +68,7 @@ export default function StudyPlanPage() {
                           />
                           <Link
                             to={`/log?topic=${item.topic_id}`}
-                            className="shrink-0 rounded-lg border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900"
+                            className="shrink-0 rounded-lg border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-slate-100"
                           >
                             Practice this →
                           </Link>

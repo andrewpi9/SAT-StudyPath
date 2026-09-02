@@ -9,6 +9,15 @@
       content="Personalized SAT study-path generator: recency-weighted mastery scoring with forgetting-curve decay and real test-frequency weighting."
     />
     <title>SAT StudyPath</title>
+    <script>
+      // Apply the saved theme before first paint to avoid a flash.
+      try {
+        var t = localStorage.getItem('sat_studypath_theme')
+        if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark')
+        }
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>

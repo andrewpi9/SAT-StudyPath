@@ -24,9 +24,9 @@ interface LoggedRow {
   attempts: number
 }
 
-const fieldLabel = 'block text-sm font-medium text-slate-700'
+const fieldLabel = 'block text-sm font-medium text-slate-700 dark:text-slate-300'
 const fieldInput =
-  'mt-1 block w-full rounded-lg border border-slate-300 p-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500'
+  'mt-1 block w-full rounded-lg border border-slate-300 bg-white p-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100'
 
 export default function LogAttemptPage() {
   const state = useAsync(getMastery)
@@ -127,7 +127,7 @@ export default function LogAttemptPage() {
                     ))}
                   </select>
                   {selected && (
-                    <span className="mt-1 block text-xs font-normal text-slate-500">
+                    <span className="mt-1 block text-xs font-normal text-slate-500 dark:text-slate-400">
                       Current:{' '}
                       {selected.attempts_count === 0
                         ? 'not started'
@@ -138,7 +138,7 @@ export default function LogAttemptPage() {
 
                 <fieldset>
                   <legend className={fieldLabel}>Outcome</legend>
-                  <div className="mt-1 inline-flex rounded-lg border border-slate-300 p-0.5">
+                  <div className="mt-1 inline-flex gap-1 rounded-lg border border-slate-300 p-1 dark:border-slate-700">
                     {[
                       { value: true, label: 'Correct' },
                       { value: false, label: 'Incorrect' },
@@ -151,8 +151,8 @@ export default function LogAttemptPage() {
                         className={[
                           'rounded-md px-4 py-1.5 text-sm font-medium transition-colors',
                           correct === value
-                            ? 'bg-slate-900 text-white'
-                            : 'text-slate-600 hover:text-slate-900',
+                            ? 'bg-indigo-600 text-white'
+                            : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800',
                         ].join(' ')}
                       >
                         {label}
@@ -189,7 +189,9 @@ export default function LogAttemptPage() {
                   </label>
                 </div>
 
-                {formError && <p className="text-sm text-red-700">{formError}</p>}
+                {formError && (
+                  <p className="text-sm text-red-700 dark:text-red-400">{formError}</p>
+                )}
 
                 <button
                   type="submit"
@@ -205,28 +207,33 @@ export default function LogAttemptPage() {
 
         {log.length > 0 && (
           <Card className="p-5">
-            <h2 className="text-sm font-semibold text-slate-700">Logged this session</h2>
+            <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+              Logged this session
+            </h2>
             <ul className="mt-3 space-y-2 text-sm">
               {log.map((row) => (
                 <li key={row.key} className="flex flex-wrap items-center gap-x-2">
                   <span
                     className={
                       row.correct
-                        ? 'font-semibold text-green-600'
-                        : 'font-semibold text-red-500'
+                        ? 'font-semibold text-green-600 dark:text-green-400'
+                        : 'font-semibold text-red-500 dark:text-red-400'
                     }
                   >
                     {row.correct ? '✓' : '✗'}
                   </span>
-                  <span className="text-slate-900">{row.skill}</span>
-                  <span className="tabular-nums text-slate-500">
+                  <span className="text-slate-900 dark:text-slate-100">{row.skill}</span>
+                  <span className="tabular-nums text-slate-500 dark:text-slate-400">
                     {pct(row.before)} → {pct(row.after)} · {row.attempts} attempts
                   </span>
                 </li>
               ))}
             </ul>
-            <p className="mt-4 text-xs text-slate-500">
-              <Link to="/dashboard" className="font-medium text-indigo-600 hover:underline">
+            <p className="mt-4 text-xs text-slate-500 dark:text-slate-400">
+              <Link
+                to="/dashboard"
+                className="font-medium text-indigo-600 hover:underline dark:text-indigo-400"
+              >
                 See it on the dashboard →
               </Link>
             </p>

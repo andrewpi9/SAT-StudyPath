@@ -8,9 +8,13 @@ function Tile({ label, value }: { label: string; value: number }) {
   const band = masteryBand(value, 1)
   return (
     <Card className="flex-1 p-4">
-      <div className="text-xs font-medium uppercase tracking-wide text-slate-400">{label}</div>
-      <div className="mt-1 text-3xl font-bold tabular-nums text-slate-900">{pct(value)}</div>
-      <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-slate-100">
+      <div className="text-xs font-medium uppercase tracking-wide text-slate-400 dark:text-slate-500">
+        {label}
+      </div>
+      <div className="mt-1 text-3xl font-bold tabular-nums text-slate-900 dark:text-slate-100">
+        {pct(value)}
+      </div>
+      <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
         <div
           className="h-full rounded-full"
           style={{ width: pct(value), backgroundColor: band.bg }}

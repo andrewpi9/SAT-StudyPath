@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import { api } from '../api/client'
 
-/** Empty-state call to action: populate the dev database from the browser. */
+/** Empty-state call to action: populate the current account from the browser. */
 export default function SeedPrompt() {
   const [status, setStatus] = useState<'idle' | 'seeding' | 'error'>('idle')
 
@@ -17,9 +17,9 @@ export default function SeedPrompt() {
   }
 
   return (
-    <div className="mt-4 rounded-xl border border-slate-200 bg-white p-8 text-center">
-      <p className="font-medium text-slate-800">No practice data yet</p>
-      <p className="mt-1 text-sm text-slate-500">
+    <div className="mt-4 rounded-xl border border-slate-200 bg-white p-8 text-center dark:border-slate-800 dark:bg-slate-900">
+      <p className="font-medium text-slate-800 dark:text-slate-200">No practice data yet</p>
+      <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
         Load a synthetic ~4-week practice history to explore the app.
       </p>
       <button
@@ -31,7 +31,7 @@ export default function SeedPrompt() {
         {status === 'seeding' ? 'Loading…' : 'Load demo data'}
       </button>
       {status === 'error' && (
-        <p className="mt-2 text-sm text-red-700">
+        <p className="mt-2 text-sm text-red-700 dark:text-red-400">
           Couldn&rsquo;t reach the API — is the backend running?
         </p>
       )}

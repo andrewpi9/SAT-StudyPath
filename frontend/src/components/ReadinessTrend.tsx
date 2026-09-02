@@ -47,10 +47,10 @@ export default function ReadinessTrend({ points }: { points: ProgressPoint[] }) 
   return (
     <Card className="p-4">
       <div className="flex items-baseline justify-between">
-        <h2 className="text-sm font-medium text-slate-700">
+        <h2 className="text-sm font-medium text-slate-700 dark:text-slate-300">
           Readiness — last {points.length} days
         </h2>
-        <span className="text-xs text-slate-400">
+        <span className="text-xs text-slate-400 dark:text-slate-500">
           {fmtPct(points[0].overall_readiness)} → {fmtPct(last.overall_readiness)}
         </span>
       </div>
@@ -70,24 +70,46 @@ export default function ReadinessTrend({ points }: { points: ProgressPoint[] }) 
               x2={PAD.left + INNER_W}
               y1={geom.y(v)}
               y2={geom.y(v)}
-              stroke="#e2e8f0"
+              className="stroke-slate-200 dark:stroke-slate-800"
               strokeWidth={1}
             />
-            <text x={PAD.left - 6} y={geom.y(v) + 3} textAnchor="end" fontSize={10} fill="#94a3b8">
+            <text
+              x={PAD.left - 6}
+              y={geom.y(v) + 3}
+              textAnchor="end"
+              fontSize={10}
+              className="fill-slate-400 dark:fill-slate-500"
+            >
               {fmtPct(v)}
             </text>
           </g>
         ))}
 
-        <polygon points={geom.area} fill="#4f46e5" fillOpacity={0.1} />
-        <polyline points={geom.line} fill="none" stroke="#4f46e5" strokeWidth={2} />
+        <polygon points={geom.area} className="fill-indigo-500" fillOpacity={0.12} />
+        <polyline points={geom.line} fill="none" className="stroke-indigo-500" strokeWidth={2} />
 
-        <circle cx={geom.x(points.length - 1)} cy={geom.y(last.overall_readiness)} r={3} fill="#4f46e5" />
+        <circle
+          cx={geom.x(points.length - 1)}
+          cy={geom.y(last.overall_readiness)}
+          r={3}
+          className="fill-indigo-500"
+        />
 
-        <text x={PAD.left} y={H - 6} fontSize={10} fill="#94a3b8">
+        <text
+          x={PAD.left}
+          y={H - 6}
+          fontSize={10}
+          className="fill-slate-400 dark:fill-slate-500"
+        >
           {fmtDay(points[0].day)}
         </text>
-        <text x={PAD.left + INNER_W} y={H - 6} textAnchor="end" fontSize={10} fill="#94a3b8">
+        <text
+          x={PAD.left + INNER_W}
+          y={H - 6}
+          textAnchor="end"
+          fontSize={10}
+          className="fill-slate-400 dark:fill-slate-500"
+        >
           {fmtDay(last.day)}
         </text>
 
@@ -98,15 +120,14 @@ export default function ReadinessTrend({ points }: { points: ProgressPoint[] }) 
               x2={geom.x(hover)}
               y1={PAD.top}
               y2={PAD.top + INNER_H}
-              stroke="#cbd5e1"
+              className="stroke-slate-300 dark:stroke-slate-600"
               strokeWidth={1}
             />
             <circle
               cx={geom.x(hover)}
               cy={geom.y(active.overall_readiness)}
               r={3.5}
-              fill="#4f46e5"
-              stroke="#fff"
+              className="fill-indigo-500 stroke-white dark:stroke-slate-900"
               strokeWidth={1.5}
             />
             <text
@@ -114,7 +135,7 @@ export default function ReadinessTrend({ points }: { points: ProgressPoint[] }) 
               y={PAD.top + 10}
               textAnchor={geom.x(hover) > PAD.left + INNER_W - 80 ? 'end' : 'start'}
               fontSize={11}
-              fill="#0f172a"
+              className="fill-slate-900 dark:fill-slate-100"
             >
               {fmtDay(active.day)} · {fmtPct(active.overall_readiness)}
             </text>
