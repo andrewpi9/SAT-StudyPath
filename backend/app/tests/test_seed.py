@@ -50,16 +50,20 @@ def test_history_is_deterministic_for_a_given_seed(db) -> None:
     assert signature_a == signature_b
 
 
-def test_history_is_uneven_some_strong_some_weak_some_untouched(db) -> None:
+def test_history_is_uneven_some_strong_some_weak_some_barely_touched(db) -> None:
     _seed(db)
     masteries = list(db.scalars(select(TopicMastery)))
 
     untouched = [m for m in masteries if m.attempts_count == 0]
+    barely = [m for m in masteries if 0 < m.attempts_count <= 3]
     practised = [m for m in masteries if m.attempts_count > 0]
 
-    assert len(untouched) >= 3, "some topics should never have been attempted"
+    # At least one never-attempted topic (exercises the exploration bonus in the
+    # live demo) and a few barely-touched ones.
+    assert len(untouched) >= 1
     assert all(m.mastery_score == COLD_START_MASTERY for m in untouched)
     assert all(m.last_practiced is None for m in untouched)
+    assert len(barely) >= 2
 
     strong = [m for m in practised if m.mastery_score >= 0.75]
     weak = [m for m in practised if m.mastery_score <= 0.45]

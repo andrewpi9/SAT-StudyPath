@@ -16,8 +16,8 @@ from app.algorithm.mastery import (
     confidence_from_attempts,
     update_mastery,
 )
+from app.enums import Difficulty
 from app.models.attempt import Attempt
-from app.models.enums import Difficulty
 from app.models.mastery import TopicMastery
 from app.utils.time import utcnow
 

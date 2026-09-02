@@ -9,14 +9,24 @@ Built by a former SAT tutor (60+ videos, 5M+ views) as a portfolio piece. The
 full write-up — including a plain-English "How the recommendation algorithm
 works" section — lands in milestone 7.
 
-> **Status:** milestone 1 of 7 complete — repo scaffold, data model, and the
-> synthetic-history seed script.
+> **Status:** milestone 2 of 7 complete — repo scaffold, data model, the
+> synthetic-history seed script, and the full recommendation engine (EWMA
+> mastery + forgetting-curve decay + priority ranking) with a hand-computed
+> pytest suite.
 
 ## Layout
 
 ```
-backend/    FastAPI + SQLAlchemy + the recommendation engine (pure functions in app/algorithm/)
-frontend/   React + Vite + TypeScript + Tailwind (UI wired up in milestones 4-7)
+backend/
+  app/algorithm/   the recommendation engine — pure, DB-free, hand-tested functions
+    mastery.py     EWMA update on each attempt          (spec 7.1)
+    decay.py       forgetting-curve decay at read time  (spec 7.2)
+    priority.py    priority score + reason strings       (spec 7.3)
+    readiness.py   frequency-weighted roll-up
+  app/models/      SQLAlchemy 2.0 ORM
+  app/services/    the one write path (record_attempt) + taxonomy loader
+  app/tests/       test_mastery_engine.py is the one to read
+frontend/          React + Vite + TypeScript + Tailwind (UI wired up in milestones 4-7)
 ```
 
 ## Run the backend

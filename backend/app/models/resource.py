@@ -7,8 +7,8 @@ from typing import TYPE_CHECKING
 from sqlalchemy import Enum, ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from app.enums import ResourceType
 from app.models.base import Base
-from app.models.enums import ResourceType
 
 if TYPE_CHECKING:
     from app.models.topic import Topic

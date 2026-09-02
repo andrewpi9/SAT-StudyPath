@@ -5,9 +5,9 @@ Importing this package pulls in every model so that
 resolve.
 """
 
+from app.enums import Difficulty, ResourceType, Section
 from app.models.attempt import Attempt
 from app.models.base import Base
-from app.models.enums import Difficulty, ResourceType, Section
 from app.models.mastery import TopicMastery
 from app.models.resource import Resource
 from app.models.topic import Topic

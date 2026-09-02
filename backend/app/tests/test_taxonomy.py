@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 
 from app.data.taxonomy import TAXONOMY, section_weight_totals
-from app.models.enums import Section
+from app.enums import Section
 from app.services.topics import load_taxonomy
 
 

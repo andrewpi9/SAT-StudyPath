@@ -8,9 +8,9 @@ Run from the ``backend/`` directory:
     python -m app.seed --keep         # don't wipe existing data first
 
 The generated history is intentionally uneven: a handful of topics are strong,
-several are weak, some are barely touched, and a few have never been attempted
-at all -- so the dashboard and the study plan both look meaningful on first run
-without anyone grinding real practice questions.
+several are weak, a few are barely touched, and one has never been attempted --
+so the dashboard and the study plan both look meaningful on first run without
+anyone grinding real practice questions.
 
 Every attempt is pure metadata (topic tag, correct/incorrect, seconds,
 difficulty, timestamp). No question text, answer choices, or passages exist
@@ -27,9 +27,12 @@ from datetime import timedelta
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.algorithm.decay import decayed_mastery
+from app.algorithm.priority import TopicSnapshot, rank_topics
+from app.algorithm.readiness import readiness_by_section, weighted_readiness
 from app.database import SessionLocal, engine
+from app.enums import Difficulty, Section
 from app.models import Base
-from app.models.enums import Difficulty, Section
 from app.models.mastery import TopicMastery
 from app.models.topic import Topic
 from app.services.attempts import record_attempt
@@ -56,12 +59,16 @@ class Profile:
     difficulty_mix: tuple[float, float, float]
 
 
+# topic_count values sum to the 35-skill taxonomy. The synthetic student has
+# worked through most topics at least once (so the study plan is driven by
+# decay + frequency + urgency, the interesting part), with a few barely-touched
+# and one never-touched topic so the exploration bonus visibly matters too.
 PROFILES: list[Profile] = [
-    Profile("strong", 7, (0.80, 0.95), (7, 13), 0.35, (0.25, 0.45, 0.30)),
-    Profile("developing", 10, (0.52, 0.72), (6, 12), 0.30, (0.33, 0.47, 0.20)),
-    Profile("weak", 8, (0.18, 0.45), (5, 10), 0.25, (0.45, 0.42, 0.13)),
-    Profile("barely_touched", 5, (0.30, 0.65), (1, 3), 0.15, (0.55, 0.37, 0.08)),
-    Profile("untouched", 5, (0.30, 0.65), (0, 0), 0.0, (0.5, 0.4, 0.1)),
+    Profile("strong", 7, (0.80, 0.95), (5, 11), 0.42, (0.25, 0.45, 0.30)),
+    Profile("developing", 13, (0.52, 0.72), (5, 10), 0.34, (0.33, 0.47, 0.20)),
+    Profile("weak", 11, (0.18, 0.45), (4, 9), 0.30, (0.45, 0.42, 0.13)),
+    Profile("barely_touched", 3, (0.30, 0.65), (2, 3), 0.15, (0.55, 0.37, 0.08)),
+    Profile("untouched", 1, (0.30, 0.65), (0, 0), 0.0, (0.5, 0.4, 0.1)),
 ]
 
 # Accuracy shift applied on top of ``true_p`` for each difficulty band.
@@ -86,9 +93,7 @@ def _clamp(value: float, low: float, high: float) -> float:
 
 
 def _pick_difficulty(rng: random.Random, mix: tuple[float, float, float]) -> Difficulty:
-    return rng.choices(
-        [Difficulty.EASY, Difficulty.MEDIUM, Difficulty.HARD], weights=mix, k=1
-    )[0]
+    return rng.choices([Difficulty.EASY, Difficulty.MEDIUM, Difficulty.HARD], weights=mix, k=1)[0]
 
 
 def _attempt_time_seconds(rng: random.Random, difficulty: Difficulty, correct: bool) -> int:
@@ -142,9 +147,7 @@ def _plan_topic_attempts(
     return planned
 
 
-def generate_history(
-    db: Session, rng: random.Random, target_attempts: int | None = None
-) -> int:
+def generate_history(db: Session, rng: random.Random, target_attempts: int | None = None) -> int:
     """Assign a profile to every topic and replay a synthetic attempt history.
 
     Attempts are replayed in strict chronological order so each topic's EWMA
@@ -172,8 +175,7 @@ def generate_history(
         current_total = sum(planned_counts.values()) or 1
         scale = target_attempts / current_total
         planned_counts = {
-            tid: (max(1, round(n * scale)) if n > 0 else 0)
-            for tid, n in planned_counts.items()
+            tid: (max(1, round(n * scale)) if n > 0 else 0) for tid, n in planned_counts.items()
         }
 
     all_planned: list[_PlannedAttempt] = []
@@ -202,6 +204,24 @@ def reset_database() -> None:
     Base.metadata.create_all(bind=engine)
 
 
+def _snapshots(db: Session) -> list[TopicSnapshot]:
+    """Project the ORM state into the algorithm's plain input type."""
+    topics = db.scalars(select(Topic)).all()
+    return [
+        TopicSnapshot(
+            topic_id=t.id,
+            section=t.section,
+            domain=t.domain,
+            skill_name=t.skill_name,
+            frequency_weight=t.frequency_weight,
+            mastery_score=t.mastery.mastery_score,
+            attempts_count=t.mastery.attempts_count,
+            last_practiced=t.mastery.last_practiced,
+        )
+        for t in topics
+    ]
+
+
 def print_summary(db: Session) -> None:
     now = utcnow()
     topics = list(
@@ -212,30 +232,35 @@ def print_summary(db: Session) -> None:
         )
     )
     total_attempts = sum(t.mastery.attempts_count for t in topics if t.mastery)
+    snapshots = _snapshots(db)
+    by_section = readiness_by_section(snapshots, now)
 
     print(f"\n  {len(topics)} topics · {total_attempts} synthetic attempts\n")
     for section in (Section.MATH, Section.READING_WRITING):
         section_topics = [t for t in topics if t.section == section]
-        print(f"  ══ {section.value} " + "═" * (72 - len(section.value)))
+        print(f"  ══ {section.label} " + "═" * (70 - len(section.label)))
         current_domain = ""
         for topic in section_topics:
             if topic.domain != current_domain:
                 current_domain = topic.domain
                 print(f"  {current_domain}")
             m: TopicMastery = topic.mastery
+            decayed = decayed_mastery(m.mastery_score, m.last_practiced, now)
             if m.last_practiced is None:
-                last = "never"
+                last, shown = "never", "  --  "
             else:
                 last = f"{(now - m.last_practiced).days}d ago"
-            score = "  --  " if m.attempts_count == 0 else f"{m.mastery_score * 100:4.0f}% "
-            print(f"    {topic.skill_name:<54}{m.attempts_count:>3} attempts{score:>9}{last:>9}")
+                shown = f"{m.mastery_score * 100:3.0f}% → {decayed * 100:3.0f}%"
+            print(f"    {topic.skill_name:<54}{m.attempts_count:>3} att{shown:>14}{last:>9}")
 
-        weighted = sum(t.frequency_weight * t.mastery.mastery_score for t in section_topics)
-        weight_total = sum(t.frequency_weight for t in section_topics)
-        readiness = weighted / weight_total if weight_total else 0.0
-        print(f"    → frequency-weighted mastery (pre-decay): {readiness * 100:.0f}%\n")
+        print(f"    → readiness (frequency-weighted, decayed): {by_section[section] * 100:.0f}%\n")
 
-    print("  Decay + priority ranking arrive in milestone 2; this is the raw EWMA.\n")
+    print(f"  Overall readiness: {weighted_readiness(snapshots, now) * 100:.0f}%\n")
+    print("  ── Today's study plan (top 5) " + "─" * 43)
+    for i, rec in enumerate(rank_topics(snapshots, now=now, limit=5), start=1):
+        print(f"  {i}. {rec.skill_name}")
+        print(f"     {rec.reason}")
+    print()
 
 
 def main() -> None:

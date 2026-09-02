@@ -32,7 +32,9 @@ COLD_START_MASTERY: float = 0.4
 CONFIDENCE_FULL_AT: int = 5
 
 
-def update_mastery(old_mastery: float, correct: bool, learning_rate: float = LEARNING_RATE) -> float:
+def update_mastery(
+    old_mastery: float, correct: bool, learning_rate: float = LEARNING_RATE
+) -> float:
     """Return the new mastery estimate after one attempt.
 
     ``new = old + lr * (outcome - old)``, the standard EWMA / delta-rule update.

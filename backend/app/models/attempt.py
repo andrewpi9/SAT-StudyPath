@@ -11,8 +11,8 @@ from typing import TYPE_CHECKING
 from sqlalchemy import Boolean, DateTime, Enum, ForeignKey, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from app.enums import Difficulty
 from app.models.base import Base
-from app.models.enums import Difficulty
 from app.utils.time import utcnow
 
 if TYPE_CHECKING:
@@ -27,7 +27,9 @@ class Attempt(Base):
     correct: Mapped[bool] = mapped_column(Boolean)
     time_taken_seconds: Mapped[int] = mapped_column(Integer)
     difficulty: Mapped[Difficulty] = mapped_column(
-        Enum(Difficulty, native_enum=False, length=16, values_callable=lambda e: [m.value for m in e])
+        Enum(
+            Difficulty, native_enum=False, length=16, values_callable=lambda e: [m.value for m in e]
+        )
     )
     # Naive UTC. Backdated by the seed script to simulate a multi-week history.
     timestamp: Mapped[datetime] = mapped_column(DateTime, default=utcnow, index=True)

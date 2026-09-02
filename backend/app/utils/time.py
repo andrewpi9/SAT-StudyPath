@@ -9,12 +9,12 @@ to Postgres (store as ``timestamp`` / ``timestamptz`` at the DB layer).
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 
 def utcnow() -> datetime:
     """Current UTC time as a naive ``datetime`` (no tzinfo)."""
-    return datetime.now(timezone.utc).replace(tzinfo=None)
+    return datetime.now(UTC).replace(tzinfo=None)
 
 
 def days_between(earlier: datetime, later: datetime) -> float:

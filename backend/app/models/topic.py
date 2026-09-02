@@ -7,8 +7,8 @@ from typing import TYPE_CHECKING
 from sqlalchemy import Enum, Float, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from app.enums import Section
 from app.models.base import Base
-from app.models.enums import Section
 
 if TYPE_CHECKING:
     from app.models.attempt import Attempt
