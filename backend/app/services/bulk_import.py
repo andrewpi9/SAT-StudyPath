@@ -81,7 +81,7 @@ def _normalise(raw: dict[str, str | None]) -> dict[str, str]:
     return out
 
 
-def import_attempts_csv(db: Session, content: str) -> BulkResult:
+def import_attempts_csv(db: Session, user_id: int, content: str) -> BulkResult:
     reader = csv.DictReader(io.StringIO(content))
     if not reader.fieldnames:
         return BulkResult(errors=[RowError(0, "The file appears to be empty.")])
@@ -109,6 +109,7 @@ def import_attempts_csv(db: Session, content: str) -> BulkResult:
         topic_id, correct, seconds, difficulty, days_ago = parsed
         record_attempt(
             db,
+            user_id=user_id,
             topic_id=topic_id,
             correct=correct,
             time_taken_seconds=seconds,

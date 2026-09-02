@@ -26,9 +26,14 @@ class Settings(BaseSettings):
     # Origins allowed by CORS. Accepts a comma-separated string from the env.
     cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
 
-    # Guards POST /api/topics/seed (it wipes and regenerates data). On for local
-    # dev; set false in any shared deployment.
+    # Guards POST /api/topics/seed (it wipes and regenerates the caller's data).
+    # On for local dev; set false in any shared deployment.
     enable_dev_endpoints: bool = True
+
+    # Auth. jwt_secret MUST be overridden in any deployment.
+    jwt_secret: str = "dev-secret-do-not-use-in-production"
+    jwt_expire_minutes: int = 60 * 24 * 7  # one week
+    bcrypt_rounds: int = 12
 
     @field_validator("database_url")
     @classmethod

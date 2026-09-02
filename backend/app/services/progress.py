@@ -1,4 +1,4 @@
-"""Build the readiness-over-time series from the database."""
+"""Build one user's readiness-over-time series from the database."""
 
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ from app.utils.time import utcnow
 MAX_RANGE_DAYS = 365
 
 
-def get_readiness_series(db: Session, days: int) -> list[ReadinessPoint]:
+def get_readiness_series(db: Session, user_id: int, days: int) -> list[ReadinessPoint]:
     days = max(1, min(days, MAX_RANGE_DAYS))
     end = utcnow().date()
     start = end - timedelta(days=days - 1)
@@ -26,6 +26,8 @@ def get_readiness_series(db: Session, days: int) -> list[ReadinessPoint]:
     }
     events = [
         AttemptEvent(topic_id=a.topic_id, correct=a.correct, at=a.timestamp)
-        for a in db.scalars(select(Attempt).order_by(Attempt.timestamp))
+        for a in db.scalars(
+            select(Attempt).where(Attempt.user_id == user_id).order_by(Attempt.timestamp)
+        )
     ]
     return readiness_series(topic_weights, events, start=start, end=end)

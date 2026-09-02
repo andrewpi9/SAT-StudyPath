@@ -7,6 +7,7 @@ from app.schemas.attempt import (
     BulkImportError,
     BulkImportResult,
 )
+from app.schemas.auth import Credentials, TokenResponse, UserOut
 from app.schemas.mastery import MasteryOverviewOut, TopicMasteryOut
 from app.schemas.progress import ProgressOut, ReadinessPointOut
 from app.schemas.resource import ResourceOut
@@ -20,6 +21,7 @@ __all__ = [
     "AttemptResultOut",
     "BulkImportError",
     "BulkImportResult",
+    "Credentials",
     "MasteryOverviewOut",
     "ProgressOut",
     "ReadinessPointOut",
@@ -28,6 +30,8 @@ __all__ = [
     "SeedResultOut",
     "StudyPlanItemOut",
     "StudyPlanOut",
+    "TokenResponse",
     "TopicMasteryOut",
     "TopicOut",
+    "UserOut",
 ]

@@ -41,10 +41,8 @@ def test_load_taxonomy_is_idempotent(db) -> None:
     first = load_taxonomy(db)
     db.commit()
     assert len(first) == len(TAXONOMY)
+    assert all(topic.id is not None for topic in first)
 
     second = load_taxonomy(db)
     db.commit()
     assert second == []  # nothing new inserted the second time
-
-    # Every topic gets a cold-start mastery row.
-    assert all(topic.mastery is not None for topic in first)

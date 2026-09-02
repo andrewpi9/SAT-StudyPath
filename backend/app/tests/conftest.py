@@ -6,15 +6,24 @@ exercise pure functions. These fixtures are for the service / seed / API layers.
 
 from __future__ import annotations
 
-from collections.abc import Iterator
+import os
 
-import pytest
-from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
-from sqlalchemy.orm import Session, sessionmaker
-from sqlalchemy.pool import StaticPool
+# Fast, deterministic auth in tests. Must be set before app.config is imported.
+os.environ.setdefault("BCRYPT_ROUNDS", "4")
+os.environ.setdefault("JWT_SECRET", "test-secret")
 
-from app.models import Base
+from collections.abc import Iterator  # noqa: E402
+
+import pytest  # noqa: E402
+from fastapi.testclient import TestClient  # noqa: E402
+from sqlalchemy import create_engine  # noqa: E402
+from sqlalchemy.orm import Session, sessionmaker  # noqa: E402
+from sqlalchemy.pool import StaticPool  # noqa: E402
+
+from app.models import Base  # noqa: E402
+
+TEST_EMAIL = "test@studypath.app"
+TEST_PASSWORD = "password123"
 
 
 @pytest.fixture
@@ -54,3 +63,22 @@ def client(db: Session) -> Iterator[TestClient]:
         yield TestClient(app)
     finally:
         app.dependency_overrides.clear()
+
+
+@pytest.fixture
+def user_id(client: TestClient) -> int:
+    """Sign up a test user via the API and return its id."""
+    resp = client.post("/api/auth/signup", json={"email": TEST_EMAIL, "password": TEST_PASSWORD})
+    assert resp.status_code == 201, resp.text
+    return resp.json()["user"]["id"]
+
+
+@pytest.fixture
+def authed_client(client: TestClient, user_id: int) -> TestClient:
+    """A TestClient with a valid Bearer token for the test user set as a default
+    header on every request."""
+    token = client.post(
+        "/api/auth/login", json={"email": TEST_EMAIL, "password": TEST_PASSWORD}
+    ).json()["access_token"]
+    client.headers["Authorization"] = f"Bearer {token}"
+    return client

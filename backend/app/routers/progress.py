@@ -3,6 +3,7 @@ from __future__ import annotations
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
+from app.auth import CurrentUser
 from app.database import get_db
 from app.enums import Section
 from app.schemas.progress import ProgressOut, ReadinessPointOut
@@ -13,11 +14,13 @@ router = APIRouter(prefix="/api", tags=["progress"])
 
 @router.get("/progress", response_model=ProgressOut)
 def get_progress(
-    days: int = Query(30, ge=1, le=MAX_RANGE_DAYS), db: Session = Depends(get_db)
+    user: CurrentUser,
+    days: int = Query(30, ge=1, le=MAX_RANGE_DAYS),
+    db: Session = Depends(get_db),
 ) -> ProgressOut:
     """Frequency-weighted readiness for each of the last ``days`` days, replayed
-    from the attempt history."""
-    series = get_readiness_series(db, days)
+    from the current user's attempt history."""
+    series = get_readiness_series(db, user.id, days)
     return ProgressOut(
         range_days=days,
         points=[

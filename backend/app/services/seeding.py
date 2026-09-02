@@ -139,8 +139,10 @@ def _plan_topic_attempts(
     return planned
 
 
-def generate_history(db: Session, rng: random.Random, target_attempts: int | None = None) -> int:
-    """Assign a profile to every topic and replay a synthetic attempt history.
+def generate_history(
+    db: Session, user_id: int, rng: random.Random, target_attempts: int | None = None
+) -> int:
+    """Assign a profile to every topic and replay a synthetic history for one user.
 
     Attempts are replayed in strict chronological order so each topic's EWMA
     mastery reflects the real sequence of outcomes. Returns the number of
@@ -181,6 +183,7 @@ def generate_history(db: Session, rng: random.Random, target_attempts: int | Non
     for plan in all_planned:
         record_attempt(
             db,
+            user_id=user_id,
             topic_id=plan.topic_id,
             correct=plan.correct,
             time_taken_seconds=plan.time_taken_seconds,
@@ -191,9 +194,16 @@ def generate_history(db: Session, rng: random.Random, target_attempts: int | Non
     return len(all_planned)
 
 
-def clear_practice_data(db: Session) -> None:
-    """Delete every row (cascades handle the rest). Keeps the schema in place."""
-    for model in (Attempt, Resource, TopicMastery, Topic):
+def clear_user_practice_data(db: Session, user_id: int) -> None:
+    """Delete one user's attempts + mastery rows. Keeps topics/resources."""
+    db.execute(delete(Attempt).where(Attempt.user_id == user_id))
+    db.execute(delete(TopicMastery).where(TopicMastery.user_id == user_id))
+    db.flush()
+
+
+def wipe_all(db: Session) -> None:
+    """Full reset for the CLI: every row except accounts."""
+    for model in (Attempt, TopicMastery, Resource, Topic):
         db.execute(delete(model))
     db.flush()
 
@@ -201,19 +211,23 @@ def clear_practice_data(db: Session) -> None:
 def seed_database(
     db: Session,
     *,
+    user_id: int,
     rng_seed: int = 42,
     target_attempts: int | None = None,
-    reset: bool = True,
+    reset_user: bool = True,
 ) -> SeedResult:
-    """Load the taxonomy and a synthetic history, then commit.
+    """Ensure the taxonomy + resources exist, then (re)generate a synthetic
+    history for ``user_id`` and commit.
 
-    With ``reset`` (the default) existing rows are cleared first so the result is
-    reproducible for a given ``rng_seed``.
+    With ``reset_user`` (the default) that user's existing attempts/mastery are
+    cleared first, so the result is reproducible for a given ``rng_seed``.
     """
-    if reset:
-        clear_practice_data(db)
     created = load_taxonomy(db)
     load_resources(db)
-    attempts = generate_history(db, random.Random(rng_seed), target_attempts=target_attempts)
+    if reset_user:
+        clear_user_practice_data(db, user_id)
+    attempts = generate_history(
+        db, user_id, random.Random(rng_seed), target_attempts=target_attempts
+    )
     db.commit()
-    return SeedResult(topics_created=len(created), attempts_created=attempts, reset=reset)
+    return SeedResult(topics_created=len(created), attempts_created=attempts, reset=reset_user)

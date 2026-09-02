@@ -15,7 +15,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
 from app.database import init_db
-from app.routers import attempts, mastery, progress, resources, study_plan, topics
+from app.routers import attempts, auth, mastery, progress, resources, study_plan, topics
 
 
 @asynccontextmanager
@@ -38,6 +38,7 @@ def create_app() -> FastAPI:
     def health() -> dict[str, str]:
         return {"status": "ok"}
 
+    app.include_router(auth.router)
     app.include_router(topics.router)
     app.include_router(attempts.router)
     app.include_router(mastery.router)

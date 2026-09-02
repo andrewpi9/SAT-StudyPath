@@ -1,15 +1,14 @@
-"""Seed the database with the taxonomy and a synthetic practice history.
+"""Seed the database: taxonomy, resources, and a synthetic history for the demo user.
 
 Run from the ``backend/`` directory:
 
     python -m app.seed                # deterministic demo history (rng seed 42)
     python -m app.seed --seed 7       # a different but still reproducible history
     python -m app.seed --attempts 300 # scale the number of attempts
-    python -m app.seed --keep         # add to existing data instead of wiping
 
-The generation logic lives in ``app.services.seeding`` (shared with the
-``POST /api/topics/seed`` endpoint); this module is just the CLI wrapper plus a
-readable summary of the resulting mastery picture and study plan.
+Log in as  demo@studypath.app / demo-password  to see it. The generation logic
+lives in ``app.services.seeding`` (shared with ``POST /api/topics/seed``); this
+module is the CLI wrapper plus a readable summary.
 """
 
 from __future__ import annotations
@@ -28,11 +27,12 @@ from app.models import Base
 from app.models.mastery import TopicMastery
 from app.models.topic import Topic
 from app.services.analytics import topic_snapshots
-from app.services.seeding import seed_database
+from app.services.seeding import seed_database, wipe_all
+from app.services.users import DEMO_EMAIL, DEMO_PASSWORD, get_or_create_demo_user
 from app.utils.time import utcnow
 
 
-def print_summary(db: Session) -> None:
+def print_summary(db: Session, user_id: int) -> None:
     now = utcnow()
     topics = list(
         db.scalars(
@@ -41,9 +41,13 @@ def print_summary(db: Session) -> None:
             )
         )
     )
-    total_attempts = sum(t.mastery.attempts_count for t in topics if t.mastery)
-    snapshots = topic_snapshots(db)
+    mastery_by_topic = {
+        m.topic_id: m
+        for m in db.scalars(select(TopicMastery).where(TopicMastery.user_id == user_id))
+    }
+    snapshots = topic_snapshots(db, user_id)
     by_section = readiness_by_section(snapshots, now)
+    total_attempts = sum(m.attempts_count for m in mastery_by_topic.values())
 
     print(f"\n  {len(topics)} topics · {total_attempts} synthetic attempts\n")
     for section in (Section.MATH, Section.READING_WRITING):
@@ -54,14 +58,15 @@ def print_summary(db: Session) -> None:
             if topic.domain != current_domain:
                 current_domain = topic.domain
                 print(f"  {current_domain}")
-            m: TopicMastery = topic.mastery
-            decayed = decayed_mastery(m.mastery_score, m.last_practiced, now)
-            if m.last_practiced is None:
-                last, shown = "never", "  --  "
+            m = mastery_by_topic.get(topic.id)
+            if m is None:
+                shown, last = "  --  ", "never"
             else:
-                last = f"{(now - m.last_practiced).days}d ago"
+                decayed = decayed_mastery(m.mastery_score, m.last_practiced, now)
                 shown = f"{m.mastery_score * 100:3.0f}% → {decayed * 100:3.0f}%"
-            print(f"    {topic.skill_name:<54}{m.attempts_count:>3} att{shown:>14}{last:>9}")
+                last = f"{(now - m.last_practiced).days}d ago" if m.last_practiced else "never"
+            count = m.attempts_count if m else 0
+            print(f"    {topic.skill_name:<54}{count:>3} att{shown:>14}{last:>9}")
 
         print(f"    → readiness (frequency-weighted, decayed): {by_section[section] * 100:.0f}%\n")
 
@@ -79,21 +84,22 @@ def main() -> None:
     parser.add_argument(
         "--attempts", type=int, default=None, help="approx. total attempts to generate"
     )
-    parser.add_argument(
-        "--keep", action="store_true", help="add to existing data instead of wiping it"
-    )
     args = parser.parse_args()
 
     Base.metadata.create_all(bind=engine)
 
     db = SessionLocal()
     try:
+        wipe_all(db)
+        demo = get_or_create_demo_user(db)
+        db.commit()
         result = seed_database(
-            db, rng_seed=args.seed, target_attempts=args.attempts, reset=not args.keep
+            db, user_id=demo.id, rng_seed=args.seed, target_attempts=args.attempts
         )
-        print(f"Loaded taxonomy: {result.topics_created} topics inserted.")
-        print(f"Generated {result.attempts_created} synthetic attempts (rng seed {args.seed}).")
-        print_summary(db)
+        print(f"Loaded taxonomy: {result.topics_created} topics.")
+        print(f"Generated {result.attempts_created} attempts for {DEMO_EMAIL} (rng {args.seed}).")
+        print(f"Log in with:  {DEMO_EMAIL} / {DEMO_PASSWORD}")
+        print_summary(db, demo.id)
     finally:
         db.close()
 

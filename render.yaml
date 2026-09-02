@@ -15,8 +15,10 @@ services:
         fromDatabase:
           name: sat-studypath-db
           property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
       - key: ENABLE_DEV_ENDPOINTS
-        value: "false"
+        value: "true"   # demo deployment: the "Load demo data" button uses it
       - key: CORS_ORIGINS
         sync: false   # set to the deployed frontend origin, e.g. https://sat-studypath.vercel.app
 

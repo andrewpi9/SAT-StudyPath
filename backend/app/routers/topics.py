@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.auth import CurrentUser
 from app.config import settings
 from app.database import get_db
 from app.models.topic import Topic
@@ -16,7 +17,7 @@ router = APIRouter(prefix="/api/topics", tags=["topics"])
 
 @router.get("", response_model=list[TopicOut])
 def list_topics(db: Session = Depends(get_db)) -> list[Topic]:
-    """The full skill taxonomy, ordered section -> domain -> weight."""
+    """The full skill taxonomy (public reference data)."""
     return list(
         db.scalars(
             select(Topic).order_by(
@@ -27,8 +28,12 @@ def list_topics(db: Session = Depends(get_db)) -> list[Topic]:
 
 
 @router.post("/seed", response_model=SeedResultOut, status_code=status.HTTP_201_CREATED)
-def seed(payload: SeedRequest | None = None, db: Session = Depends(get_db)) -> SeedResultOut:
-    """Dev only: (re)load the taxonomy and a synthetic practice history."""
+def seed(
+    user: CurrentUser,
+    payload: SeedRequest | None = None,
+    db: Session = Depends(get_db),
+) -> SeedResultOut:
+    """Dev only: (re)generate a synthetic practice history for the current user."""
     if not settings.enable_dev_endpoints:
         raise HTTPException(
             status.HTTP_403_FORBIDDEN, "Seeding is disabled (ENABLE_DEV_ENDPOINTS=false)"
@@ -36,8 +41,9 @@ def seed(payload: SeedRequest | None = None, db: Session = Depends(get_db)) -> S
     payload = payload or SeedRequest()
     result = seed_database(
         db,
+        user_id=user.id,
         rng_seed=payload.rng_seed,
         target_attempts=payload.target_attempts,
-        reset=payload.reset,
+        reset_user=payload.reset,
     )
     return SeedResultOut.model_validate(result)

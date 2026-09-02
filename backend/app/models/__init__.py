@@ -11,6 +11,7 @@ from app.models.base import Base
 from app.models.mastery import TopicMastery
 from app.models.resource import Resource
 from app.models.topic import Topic
+from app.models.user import User
 
 __all__ = [
     "Attempt",
@@ -21,4 +22,5 @@ __all__ = [
     "Topic",
     "TopicMastery",
     "Resource",
+    "User",
 ]

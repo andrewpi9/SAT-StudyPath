@@ -1,4 +1,4 @@
-"""Topic: one testable SAT skill within a domain."""
+"""Topic: one testable SAT skill within a domain. Global reference data."""
 
 from __future__ import annotations
 
@@ -11,8 +11,6 @@ from app.enums import Section
 from app.models.base import Base
 
 if TYPE_CHECKING:
-    from app.models.attempt import Attempt
-    from app.models.mastery import TopicMastery
     from app.models.resource import Resource
 
 
@@ -32,12 +30,6 @@ class Topic(Base):
     # proprietary source.
     frequency_weight: Mapped[float] = mapped_column(Float)
 
-    attempts: Mapped[list["Attempt"]] = relationship(
-        back_populates="topic", cascade="all, delete-orphan", order_by="Attempt.timestamp"
-    )
-    mastery: Mapped["TopicMastery | None"] = relationship(
-        back_populates="topic", uselist=False, cascade="all, delete-orphan"
-    )
     resources: Mapped[list["Resource"]] = relationship(
         back_populates="topic", cascade="all, delete-orphan"
     )

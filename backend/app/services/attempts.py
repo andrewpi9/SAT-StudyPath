@@ -1,8 +1,8 @@
 """Recording an attempt and folding it into the topic's mastery estimate.
 
-This is the single write path for practice data: both the seed script (replaying
-a synthetic history) and ``POST /api/attempts`` go through ``record_attempt`` so
-the EWMA update lives in exactly one place.
+This is the single write path for practice data: the seed script, the CSV
+importer, and ``POST /api/attempts`` all go through ``record_attempt`` so the
+EWMA update lives in exactly one place.
 """
 
 from __future__ import annotations
@@ -22,10 +22,11 @@ from app.models.mastery import TopicMastery
 from app.utils.time import utcnow
 
 
-def _get_or_create_mastery(db: Session, topic_id: int) -> TopicMastery:
-    mastery = db.get(TopicMastery, topic_id)
+def _get_or_create_mastery(db: Session, user_id: int, topic_id: int) -> TopicMastery:
+    mastery = db.get(TopicMastery, (user_id, topic_id))
     if mastery is None:
         mastery = TopicMastery(
+            user_id=user_id,
             topic_id=topic_id,
             mastery_score=COLD_START_MASTERY,
             confidence=0.0,
@@ -39,13 +40,14 @@ def _get_or_create_mastery(db: Session, topic_id: int) -> TopicMastery:
 def record_attempt(
     db: Session,
     *,
+    user_id: int,
     topic_id: int,
     correct: bool,
     time_taken_seconds: int,
     difficulty: Difficulty,
     timestamp: datetime | None = None,
 ) -> Attempt:
-    """Persist one attempt and update its topic's mastery row in place.
+    """Persist one attempt and update that user's mastery row for the topic.
 
     The caller is responsible for committing. When replaying history, feed
     attempts in chronological order so the EWMA reflects the true sequence;
@@ -55,6 +57,7 @@ def record_attempt(
     ts = timestamp or utcnow()
 
     attempt = Attempt(
+        user_id=user_id,
         topic_id=topic_id,
         correct=correct,
         time_taken_seconds=time_taken_seconds,
@@ -63,7 +66,7 @@ def record_attempt(
     )
     db.add(attempt)
 
-    mastery = _get_or_create_mastery(db, topic_id)
+    mastery = _get_or_create_mastery(db, user_id, topic_id)
     mastery.mastery_score = update_mastery(mastery.mastery_score, correct)
     mastery.attempts_count += 1
     mastery.confidence = confidence_from_attempts(mastery.attempts_count)

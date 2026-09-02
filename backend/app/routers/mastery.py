@@ -3,6 +3,7 @@ from __future__ import annotations
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
+from app.auth import CurrentUser
 from app.database import get_db
 from app.schemas.mastery import MasteryOverviewOut, TopicMasteryOut
 from app.services.analytics import mastery_overview, readiness
@@ -12,11 +13,12 @@ router = APIRouter(prefix="/api", tags=["mastery"])
 
 
 @router.get("/mastery", response_model=MasteryOverviewOut)
-def get_mastery(db: Session = Depends(get_db)) -> MasteryOverviewOut:
-    """Every topic's mastery/decay/confidence, plus the readiness roll-up."""
+def get_mastery(user: CurrentUser, db: Session = Depends(get_db)) -> MasteryOverviewOut:
+    """Every topic's mastery/decay/confidence for the current user, plus the
+    readiness roll-up."""
     now = utcnow()
-    scored = mastery_overview(db, now)
-    breakdown = readiness(db, now)
+    scored = mastery_overview(db, user.id, now)
+    breakdown = readiness(db, user.id, now)
     return MasteryOverviewOut(
         generated_at=now,
         overall_readiness=breakdown.overall,

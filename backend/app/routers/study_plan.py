@@ -3,6 +3,7 @@ from __future__ import annotations
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
+from app.auth import CurrentUser
 from app.database import get_db
 from app.schemas.resource import ResourceOut
 from app.schemas.study_plan import StudyPlanItemOut, StudyPlanOut
@@ -18,11 +19,13 @@ _MAX_LIMIT = 35
 
 @router.get("/study-plan", response_model=StudyPlanOut)
 def get_study_plan(
-    limit: int = Query(5, ge=1, le=_MAX_LIMIT), db: Session = Depends(get_db)
+    user: CurrentUser,
+    limit: int = Query(5, ge=1, le=_MAX_LIMIT),
+    db: Session = Depends(get_db),
 ) -> StudyPlanOut:
     """The ranked "study this next" list with per-topic reason strings and links."""
     now = utcnow()
-    items = study_plan(db, now, limit)
+    items = study_plan(db, user.id, now, limit)
     resource_map = resources_for(db, [item.topic_id for item in items])
 
     out_items: list[StudyPlanItemOut] = []

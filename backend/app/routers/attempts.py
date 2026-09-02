@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, Response, UploadFile, sta
 from sqlalchemy.orm import Session
 
 from app.algorithm.priority import evaluate_topic
+from app.auth import CurrentUser
 from app.database import get_db
 from app.models.topic import Topic
 from app.schemas.attempt import (
@@ -14,7 +15,7 @@ from app.schemas.attempt import (
     BulkImportResult,
 )
 from app.schemas.mastery import TopicMasteryOut
-from app.services.analytics import topic_to_snapshot
+from app.services.analytics import topic_snapshot
 from app.services.attempts import record_attempt
 from app.services.bulk_import import TEMPLATE_CSV, import_attempts_csv
 from app.utils.time import utcnow
@@ -25,7 +26,9 @@ _MAX_UPLOAD_BYTES = 1_000_000
 
 
 @router.post("", response_model=AttemptResultOut, status_code=status.HTTP_201_CREATED)
-def log_attempt(payload: AttemptCreate, db: Session = Depends(get_db)) -> AttemptResultOut:
+def log_attempt(
+    payload: AttemptCreate, user: CurrentUser, db: Session = Depends(get_db)
+) -> AttemptResultOut:
     """Record one practice outcome and return the topic's updated mastery."""
     topic = db.get(Topic, payload.topic_id)
     if topic is None:
@@ -33,15 +36,15 @@ def log_attempt(payload: AttemptCreate, db: Session = Depends(get_db)) -> Attemp
 
     attempt = record_attempt(
         db,
+        user_id=user.id,
         topic_id=payload.topic_id,
         correct=payload.correct,
         time_taken_seconds=payload.time_taken_seconds,
         difficulty=payload.difficulty,
     )
     db.commit()
-    db.refresh(topic)
 
-    scored = evaluate_topic(topic_to_snapshot(topic), utcnow())
+    scored = evaluate_topic(topic_snapshot(db, user.id, topic), utcnow())
     return AttemptResultOut(
         attempt=AttemptOut.model_validate(attempt),
         mastery=TopicMasteryOut.model_validate(scored),
@@ -59,7 +62,9 @@ def bulk_template() -> Response:
 
 
 @router.post("/bulk", response_model=BulkImportResult, status_code=status.HTTP_201_CREATED)
-async def bulk_import(file: UploadFile, db: Session = Depends(get_db)) -> BulkImportResult:
+async def bulk_import(
+    user: CurrentUser, file: UploadFile, db: Session = Depends(get_db)
+) -> BulkImportResult:
     """Import many attempts from a CSV file (see GET /api/attempts/template.csv)."""
     if file.filename and not file.filename.lower().endswith(".csv"):
         raise HTTPException(status.HTTP_400_BAD_REQUEST, "Expected a .csv file")
@@ -72,7 +77,7 @@ async def bulk_import(file: UploadFile, db: Session = Depends(get_db)) -> BulkIm
     except UnicodeDecodeError as exc:
         raise HTTPException(status.HTTP_400_BAD_REQUEST, "File must be UTF-8 encoded text") from exc
 
-    result = import_attempts_csv(db, content)
+    result = import_attempts_csv(db, user.id, content)
     return BulkImportResult(
         imported=result.imported,
         failed=result.failed,
