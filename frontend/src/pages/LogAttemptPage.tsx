@@ -7,6 +7,7 @@ import { getMastery } from '../api/mastery'
 import { type Difficulty, type Section, SECTION_LABEL, type TopicMastery } from '../api/types'
 import AsyncBoundary from '../components/AsyncBoundary'
 import Card from '../components/Card'
+import CsvImport from '../components/CsvImport'
 import PageHeader from '../components/PageHeader'
 import { useAsync } from '../hooks/useAsync'
 
@@ -46,6 +47,12 @@ export default function LogAttemptPage() {
     [state.data, overrides],
   )
   const selected = topics.find((t) => t.topic_id === topicId) ?? null
+
+  function handleImported() {
+    setOverrides({})
+    setLog([])
+    state.reload()
+  }
 
   async function submit(event: FormEvent) {
     event.preventDefault()
@@ -225,6 +232,8 @@ export default function LogAttemptPage() {
             </p>
           </Card>
         )}
+
+        <CsvImport onImported={handleImported} />
       </div>
     </main>
   )

@@ -34,3 +34,16 @@ class AttemptResultOut(BaseModel):
 
     attempt: AttemptOut
     mastery: TopicMasteryOut
+
+
+class BulkImportError(BaseModel):
+    row: int  # 1-based line number in the uploaded file
+    message: str
+
+
+class BulkImportResult(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    imported: int
+    failed: int
+    errors: list[BulkImportError]
