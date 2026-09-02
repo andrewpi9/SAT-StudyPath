@@ -32,9 +32,10 @@ spreadsheet. The [How the recommendation algorithm
 works](#how-the-recommendation-algorithm-works) section below is the part worth
 reading.
 
-Three pages: **Study Plan** (the ranked list, with per-topic links and a jump to
-practice), **Dashboard** (readiness trend + a mastery heatmap), and **Log
-Attempt** (one at a time, or a CSV of a whole practice session).
+Multi-user (JWT auth). Three pages: **Study Plan** (the ranked list, with
+per-topic links and a jump to practice), **Dashboard** (readiness trend + a
+mastery heatmap), and **Log Attempt** (one at a time, or a CSV of a whole
+practice session).
 
 ## Architecture
 
@@ -50,9 +51,9 @@ Attempt** (one at a time, or a CSV of a whole practice session).
 | Layer | What lives there | Why it's separate |
 |---|---|---|
 | [`app/algorithm/`](backend/app/algorithm/) | `mastery` · `decay` · `priority` · `readiness` · `progress` | Pure functions — take plain values and an explicit `now`, return numbers/dataclasses. Tested against hand-computed values with no database or server running. |
-| [`app/services/`](backend/app/services/) | `record_attempt` (the one write path), `topic_snapshots` (the one ORM→algorithm projection), `seeding`, `bulk_import`, `progress` | Both the seed script and `POST /api/attempts` fold attempts into mastery through *one* function, so the update rule exists in exactly one place. |
-| [`app/routers/`](backend/app/routers/) | `topics` · `attempts` · `mastery` · `study_plan` · `progress` · `resources` | Thin HTTP handlers; all the logic is a layer down. |
-| [`frontend/src/`](frontend/src/) | `pages/` · `components/` · `api/` (typed fetch client) | Talks to the API over a relative `/api` path; Vite proxies it in dev. |
+| [`app/services/`](backend/app/services/) | `record_attempt` (the one write path), `topic_snapshots` (the one ORM→algorithm projection), `seeding`, `bulk_import`, `progress`, `users` | Both the seed script and `POST /api/attempts` fold attempts into mastery through *one* function scoped to one user, so the update rule exists in exactly one place. |
+| [`app/routers/`](backend/app/routers/) | `auth` · `topics` · `attempts` · `mastery` · `study_plan` · `progress` · `resources` | Thin HTTP handlers; every data route depends on `get_current_user` ([`app/auth.py`](backend/app/auth.py)). |
+| [`frontend/src/`](frontend/src/) | `pages/` · `components/` · `api/` (typed fetch client) · `auth/` (context + token store) | Talks to the API over a relative `/api` path; Vite proxies it in dev. |
 
 ## How the recommendation algorithm works
 
@@ -155,9 +156,12 @@ cd backend
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
-python -m app.seed                # create the DB + a synthetic ~4-week history
+python -m app.seed                # create the DB + the demo user's ~4-week history
 uvicorn app.main:app --reload     # API + interactive docs at /docs
 ```
+
+The seed creates **`demo@studypath.app` / `demo-password`** — or hit *Try the
+demo account* on the login screen. New sign-ups start with a clean slate.
 
 <details><summary>Prefer <a href="https://docs.astral.sh/uv/">uv</a>?</summary>
 
@@ -183,7 +187,7 @@ Nothing to seed by hand if you skip `python -m app.seed` — the empty state has
 ### Tests
 
 ```bash
-cd backend && pytest               # 107 tests
+cd backend && pytest               # 117 tests
 ```
 
 [`app/tests/test_mastery_engine.py`](backend/app/tests/test_mastery_engine.py) is
@@ -194,8 +198,12 @@ frequency weight).
 
 ## API
 
+All data routes need a bearer token from `/api/auth/login` or `/api/auth/signup`;
+`/api/topics` and `/api/resources/{id}` are public.
+
 | method | path | purpose |
 |---|---|---|
+| `POST` | `/api/auth/signup` · `/api/auth/login` | returns `{access_token, user}` |
 | `GET`  | `/api/topics` | the full 35-skill taxonomy |
 | `GET`  | `/api/mastery` | every skill's mastery / decay / confidence + readiness roll-up |
 | `GET`  | `/api/study-plan?limit=5` | ranked recommendations, each with a reason string and study links |
@@ -203,7 +211,7 @@ frequency weight).
 | `GET`  | `/api/resources/{topic_id}` | study links for one topic |
 | `POST` | `/api/attempts` | log one attempt `{topic_id, correct, time_taken_seconds, difficulty}`; returns the updated mastery |
 | `POST` | `/api/attempts/bulk` | import a CSV of attempts (`GET /api/attempts/template.csv` for the format) |
-| `POST` | `/api/topics/seed` | dev only — (re)generate the synthetic history |
+| `POST` | `/api/topics/seed` | dev only — (re)generate a synthetic history for the current user |
 
 ## Data & content policy
 
@@ -232,7 +240,9 @@ automatically (`postgres://` URLs are normalised in
 
 - **Calibrated scaled score** — map the 0–1 readiness number onto the 400–1600
   scale using real concordance data.
-- **Multi-user** — add auth and scope every query by user; the write path and the
-  snapshot projection are the only two places that would need to change.
 - **Adaptive difficulty in the plan** — recommend *which* difficulty band to
   practise per topic from the per-difficulty accuracy already being logged.
+- **Refresh tokens** — the access token is currently long-lived; add a rotating
+  refresh token and shorten it.
+- **Alembic migrations** — `create_all` is fine for a fresh deploy; a real
+  multi-tenant service needs versioned schema changes.

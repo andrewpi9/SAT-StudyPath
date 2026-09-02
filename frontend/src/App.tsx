@@ -1,7 +1,11 @@
 import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom'
 
+import { AuthProvider } from './auth/AuthProvider'
+import { useAuth } from './auth/useAuth'
+import BrandMark from './components/BrandMark'
 import DashboardPage from './pages/DashboardPage'
 import LogAttemptPage from './pages/LogAttemptPage'
+import LoginPage from './pages/LoginPage'
 import StudyPlanPage from './pages/StudyPlanPage'
 
 const NAV = [
@@ -18,23 +22,13 @@ const navLinkClass = ({ isActive }: { isActive: boolean }) =>
       : 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-800',
   ].join(' ')
 
-function BrandMark() {
-  return (
-    <svg viewBox="0 0 32 32" className="h-6 w-6" aria-hidden="true">
-      <rect width="32" height="32" rx="7" fill="#4f46e5" />
-      <rect x="7" y="17" width="4.5" height="8" rx="1.2" fill="#fff" opacity="0.55" />
-      <rect x="13.75" y="12" width="4.5" height="13" rx="1.2" fill="#fff" opacity="0.8" />
-      <rect x="20.5" y="7" width="4.5" height="18" rx="1.2" fill="#fff" />
-    </svg>
-  )
-}
-
-export default function App() {
+function AuthedApp() {
+  const { user, logout } = useAuth()
   return (
     <BrowserRouter>
       <div className="min-h-screen">
         <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/90 backdrop-blur">
-          <div className="mx-auto flex max-w-5xl flex-col gap-3 px-6 pt-4 sm:flex-row sm:items-center sm:gap-8">
+          <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-8 gap-y-3 px-6 pt-4">
             <div className="flex items-center gap-2">
               <BrandMark />
               <span className="font-semibold tracking-tight text-slate-900">SAT StudyPath</span>
@@ -46,6 +40,16 @@ export default function App() {
                 </NavLink>
               ))}
             </nav>
+            <div className="ml-auto flex items-center gap-3 pb-3">
+              <span className="hidden text-sm text-slate-500 sm:inline">{user?.email}</span>
+              <button
+                type="button"
+                onClick={logout}
+                className="text-sm font-medium text-slate-500 hover:text-slate-800"
+              >
+                Log out
+              </button>
+            </div>
           </div>
         </header>
 
@@ -56,5 +60,21 @@ export default function App() {
         </Routes>
       </div>
     </BrowserRouter>
+  )
+}
+
+function Gate() {
+  const { status } = useAuth()
+  if (status === 'loading') {
+    return <p className="p-16 text-sm text-slate-500">Loading…</p>
+  }
+  return status === 'authenticated' ? <AuthedApp /> : <LoginPage />
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <Gate />
+    </AuthProvider>
   )
 }

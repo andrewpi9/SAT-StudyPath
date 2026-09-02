@@ -1,4 +1,4 @@
-import { api, ApiError } from './client'
+import { api, ApiError, authHeaders } from './client'
 import type { AttemptResult, Difficulty } from './types'
 
 export interface LogAttemptPayload {
@@ -24,7 +24,11 @@ export async function bulkImportAttempts(file: File): Promise<BulkImportResult> 
   const form = new FormData()
   form.append('file', file)
   // Not api.post: FormData needs the browser to set its own multipart boundary.
-  const res = await fetch('/api/attempts/bulk', { method: 'POST', body: form })
+  const res = await fetch('/api/attempts/bulk', {
+    method: 'POST',
+    body: form,
+    headers: authHeaders(),
+  })
   if (!res.ok) {
     throw new ApiError(res.status, (await res.text().catch(() => '')) || res.statusText)
   }
