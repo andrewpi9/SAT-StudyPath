@@ -1,6 +1,7 @@
 import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom'
 
 import DashboardPage from './pages/DashboardPage'
+import LogAttemptPage from './pages/LogAttemptPage'
 import StudyPlanPage from './pages/StudyPlanPage'
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
@@ -27,10 +28,14 @@ export default function App() {
           <NavLink to="/dashboard" className={navLinkClass}>
             Dashboard
           </NavLink>
+          <NavLink to="/log" className={navLinkClass}>
+            Log Attempt
+          </NavLink>
         </nav>
         <Routes>
           <Route path="/" element={<StudyPlanPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/log" element={<LogAttemptPage />} />
         </Routes>
       </div>
     </BrowserRouter>
