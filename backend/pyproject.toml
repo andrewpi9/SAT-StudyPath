@@ -19,3 +19,7 @@ select = ["E", "F", "I", "UP", "B"]
 # SQLAlchemy relationship targets are quoted forward references resolved against
 # the mapper registry; the imports themselves stay under TYPE_CHECKING.
 "app/models/*.py" = ["UP037"]
+
+[tool.ruff.lint.flake8-bugbear]
+# FastAPI's dependency-injection idiom: Depends()/Query() in argument defaults.
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Query", "fastapi.Path", "fastapi.Body"]

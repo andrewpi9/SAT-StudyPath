@@ -25,6 +25,10 @@ class Settings(BaseSettings):
     # Origins allowed by CORS. Accepts a comma-separated string from the env.
     cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
 
+    # Guards POST /api/topics/seed (it wipes and regenerates data). On for local
+    # dev; set false in any shared deployment.
+    enable_dev_endpoints: bool = True
+
     @property
     def cors_origin_list(self) -> list[str]:
         return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]

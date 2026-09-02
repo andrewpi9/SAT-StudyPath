@@ -9,10 +9,10 @@ Built by a former SAT tutor (60+ videos, 5M+ views) as a portfolio piece. The
 full write-up — including a plain-English "How the recommendation algorithm
 works" section — lands in milestone 7.
 
-> **Status:** milestone 2 of 7 complete — repo scaffold, data model, the
-> synthetic-history seed script, and the full recommendation engine (EWMA
-> mastery + forgetting-curve decay + priority ranking) with a hand-computed
-> pytest suite.
+> **Status:** milestone 3 of 7 complete — data model, seed script, the full
+> recommendation engine (EWMA mastery + forgetting-curve decay + priority
+> ranking) with a hand-computed pytest suite, and the FastAPI endpoints on top
+> of it. Frontend UI is next.
 
 ## Layout
 
@@ -24,10 +24,24 @@ backend/
     priority.py    priority score + reason strings       (spec 7.3)
     readiness.py   frequency-weighted roll-up
   app/models/      SQLAlchemy 2.0 ORM
-  app/services/    the one write path (record_attempt) + taxonomy loader
+  app/schemas/     Pydantic request/response models
+  app/services/    ORM <-> algorithm glue; the one write path (record_attempt)
+  app/routers/     FastAPI endpoints (one module per resource)
   app/tests/       test_mastery_engine.py is the one to read
 frontend/          React + Vite + TypeScript + Tailwind (UI wired up in milestones 4-7)
 ```
+
+## API
+
+Run `uvicorn app.main:app --reload` and open `http://localhost:8000/docs`.
+
+| method | path | purpose |
+|---|---|---|
+| `GET`  | `/api/topics` | the full skill taxonomy |
+| `POST` | `/api/topics/seed` | dev only — (re)load taxonomy + synthetic history |
+| `POST` | `/api/attempts` | log one attempt; returns the topic's updated mastery |
+| `GET`  | `/api/mastery` | every topic's mastery/decay/confidence + readiness roll-up |
+| `GET`  | `/api/study-plan?limit=5` | ranked recommendations with reason strings |
 
 ## Run the backend
 

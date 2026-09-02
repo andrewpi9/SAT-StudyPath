@@ -10,7 +10,7 @@ from app.algorithm.mastery import COLD_START_MASTERY
 from app.models.attempt import Attempt
 from app.models.mastery import TopicMastery
 from app.models.topic import Topic
-from app.seed import generate_history
+from app.services.seeding import generate_history, seed_database
 from app.services.topics import load_taxonomy
 
 
@@ -101,3 +101,15 @@ def test_mastery_matches_a_chronological_replay(db) -> None:
 def test_attempts_scale_with_target(db) -> None:
     count = _seed(db, attempts=400)
     assert 320 <= count <= 480  # scaling is approximate (per-topic rounding)
+
+
+def test_seed_database_is_reproducible_and_resets(db) -> None:
+    first = seed_database(db, rng_seed=42)
+    assert first.topics_created == 35
+    assert 150 <= first.attempts_created <= 250
+
+    # Re-seeding with reset wipes and regenerates -> same counts, no duplication.
+    second = seed_database(db, rng_seed=42)
+    assert second.attempts_created == first.attempts_created
+    assert db.scalar(select(func.count(Attempt.id))) == second.attempts_created
+    assert db.scalar(select(func.count(Topic.id))) == 35

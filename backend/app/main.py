@@ -2,8 +2,7 @@
 
     uvicorn app.main:app --reload
 
-Milestone 1 exposes only a health check; the taxonomy / attempts / mastery /
-study-plan routers are wired up in milestone 3.
+Interactive API docs at /docs once running.
 """
 
 from __future__ import annotations
@@ -16,6 +15,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
 from app.database import init_db
+from app.routers import attempts, mastery, study_plan, topics
 
 
 @asynccontextmanager
@@ -37,6 +37,11 @@ def create_app() -> FastAPI:
     @app.get("/api/health", tags=["meta"])
     def health() -> dict[str, str]:
         return {"status": "ok"}
+
+    app.include_router(topics.router)
+    app.include_router(attempts.router)
+    app.include_router(mastery.router)
+    app.include_router(study_plan.router)
 
     return app
 
