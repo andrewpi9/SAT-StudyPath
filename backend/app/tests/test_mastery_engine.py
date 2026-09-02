@@ -37,6 +37,7 @@ from app.algorithm.priority import (
     rank_topics,
     study_plan,
 )
+from app.algorithm.progress import AttemptEvent, readiness_series
 from app.algorithm.readiness import readiness_by_section, weighted_readiness
 from app.enums import Section
 
@@ -474,3 +475,46 @@ class TestReadiness:
         by_section = readiness_by_section(snaps, NOW)
         assert by_section[Section.MATH] == pytest.approx(0.7)
         assert by_section[Section.READING_WRITING] == pytest.approx(0.4)
+
+
+# ---------------------------------------------------------------------------
+# 8. readiness_series  --  readiness reconstructed from the attempt history
+# ---------------------------------------------------------------------------
+
+
+class TestReadinessSeries:
+    WEIGHTS = {
+        1: (Section.MATH, 0.6),
+        2: (Section.READING_WRITING, 0.4),
+    }
+    START = datetime(2026, 3, 1).date()
+    END = datetime(2026, 3, 5).date()
+
+    def test_no_attempts_stays_at_cold_start(self) -> None:
+        points = readiness_series(self.WEIGHTS, [], start=self.START, end=self.END)
+        assert len(points) == 5  # inclusive
+        assert all(p.overall == pytest.approx(COLD_START_MASTERY) for p in points)
+        assert all(p.day for p in points)
+
+    def test_a_correct_attempt_lifts_readiness_that_day(self) -> None:
+        events = [AttemptEvent(topic_id=1, correct=True, at=datetime(2026, 3, 1, 12))]
+        points = readiness_series(self.WEIGHTS, events, start=self.START, end=self.END)
+
+        # day 1: topic 1 -> update(0.4, True) = 0.58 (no decay yet); topic 2 still 0.4
+        #   overall = (0.6*0.58 + 0.4*0.4) / 1.0 = 0.348 + 0.16 = 0.508
+        assert points[0].overall == pytest.approx(0.508, abs=1e-3)
+        assert points[0].by_section[Section.MATH] == pytest.approx(0.58, abs=1e-3)
+
+    def test_readiness_decays_across_a_practice_gap(self) -> None:
+        events = [AttemptEvent(topic_id=1, correct=True, at=datetime(2026, 3, 1, 12))]
+        points = readiness_series(self.WEIGHTS, events, start=self.START, end=self.END)
+
+        overalls = [p.overall for p in points]
+        assert overalls == sorted(overalls, reverse=True)  # monotonically fading
+        assert overalls[-1] < overalls[0]
+
+    def test_future_events_do_not_count_until_their_day(self) -> None:
+        events = [AttemptEvent(topic_id=1, correct=True, at=datetime(2026, 3, 4, 9))]
+        points = readiness_series(self.WEIGHTS, events, start=self.START, end=self.END)
+        assert points[0].overall == pytest.approx(COLD_START_MASTERY)  # before the attempt
+        assert points[3].overall > COLD_START_MASTERY  # on/after the attempt day

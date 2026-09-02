@@ -230,6 +230,45 @@ class TestMasteryOverview:
 
 
 # ---------------------------------------------------------------------------
+# GET /api/progress
+# ---------------------------------------------------------------------------
+
+
+class TestProgress:
+    def test_series_length_and_shape(self, seeded_client):
+        body = seeded_client.get("/api/progress", params={"days": 30}).json()
+        assert body["range_days"] == 30
+        assert len(body["points"]) == 30
+
+        days = [p["day"] for p in body["points"]]
+        assert days == sorted(days)  # ascending
+        for p in body["points"]:
+            for key in ("overall_readiness", "math_readiness", "reading_writing_readiness"):
+                assert 0.0 <= p[key] <= 1.0
+
+    def test_last_point_matches_current_readiness(self, seeded_client):
+        progress = seeded_client.get("/api/progress", params={"days": 40}).json()
+        mastery = seeded_client.get("/api/mastery").json()
+        assert progress["points"][-1]["overall_readiness"] == pytest.approx(
+            mastery["overall_readiness"], abs=0.02
+        )
+
+    def test_readiness_trends_upward_over_the_seeded_history(self, seeded_client):
+        points = seeded_client.get("/api/progress", params={"days": 40}).json()["points"]
+        assert points[-1]["overall_readiness"] > points[0]["overall_readiness"]
+
+    def test_taxonomy_but_no_attempts_is_flat_at_cold_start(self, client, db):
+        load_taxonomy(db)
+        db.commit()
+        points = client.get("/api/progress", params={"days": 7}).json()["points"]
+        assert all(p["overall_readiness"] == pytest.approx(0.4) for p in points)
+
+    @pytest.mark.parametrize("days", [0, -1, 400])
+    def test_days_out_of_bounds_is_422(self, seeded_client, days):
+        assert seeded_client.get("/api/progress", params={"days": days}).status_code == 422
+
+
+# ---------------------------------------------------------------------------
 # GET /api/study-plan
 # ---------------------------------------------------------------------------
 

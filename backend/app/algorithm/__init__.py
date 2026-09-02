@@ -30,6 +30,7 @@ from app.algorithm.priority import (
     rank_topics,
     study_plan,
 )
+from app.algorithm.progress import AttemptEvent, ReadinessPoint, readiness_series
 from app.algorithm.readiness import readiness_by_section, weighted_readiness
 
 __all__ = [
@@ -38,8 +39,11 @@ __all__ = [
     "DECAY_RATE",
     "EXPLORATION_WEIGHT",
     "LEARNING_RATE",
+    "AttemptEvent",
+    "ReadinessPoint",
     "Recommendation",
     "TopicSnapshot",
+    "readiness_series",
     "build_reason",
     "confidence_from_attempts",
     "days_since_practice",
