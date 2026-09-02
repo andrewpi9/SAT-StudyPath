@@ -1,0 +1,1 @@
+"""SAT StudyPath backend package."""
