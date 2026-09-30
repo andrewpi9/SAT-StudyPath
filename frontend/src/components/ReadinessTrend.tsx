@@ -48,7 +48,7 @@ export default function ReadinessTrend({ points }: { points: ProgressPoint[] }) 
     <Card className="p-4">
       <div className="flex items-baseline justify-between">
         <h2 className="text-sm font-medium text-slate-700 dark:text-slate-300">
-          Readiness — last {points.length} days
+          Readiness over the last {points.length} days
         </h2>
         <span className="text-xs text-slate-400 dark:text-slate-500">
           {fmtPct(points[0].overall_readiness)} → {fmtPct(last.overall_readiness)}

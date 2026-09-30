@@ -32,7 +32,7 @@ export default function SeedPrompt() {
       </button>
       {status === 'error' && (
         <p className="mt-2 text-sm text-red-700 dark:text-red-400">
-          Couldn&rsquo;t reach the API — is the backend running?
+          Couldn&rsquo;t reach the API. Is the backend running?
         </p>
       )}
     </div>

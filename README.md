@@ -11,15 +11,13 @@ The ranking runs on an algorithm that tracks how well you know each skill, fades
 
 ## Why I built this
 
-I ran an SAT tutoring channel and the question students asked most were not "how do I solve this problem" but was "what should I study next?"
+I tutored SAT prep online during my senior year of high school, through a friend's startup. The question I got asked the most was some version of "what should I focus on."
 
-Most prep tools answer that poorly. They give you a checklist or a raw accuracy percentage, and neither one deals with the two things that actually move your score.
+One student stuck with me. He kept missing the same specific kind of English question over and over, always the same weird pattern. But what got me more was something else. He would get a math or English concept completely right in a session, no issues at all, and then miss that same concept weeks later on a practice test, even though he clearly understood it when we went over it.
 
-Skills fade when you don't practice consistently. You nailed linear functions three weeks ago and have not touched them since. That is not the same as nailing them yesterday. Your lifetime accuracy number treats both cases as identical.
+That is when I started asking more about how he was actually thinking through a problem instead of just checking if his answer was right. I would ask if he really understood something or just remembered the steps from last time, and when he missed something he used to get right, I would ask him why he thought he couldn't remember it anymore. That is basically where the decay part of this app comes from. Knowing a skill once is not the same as still knowing it weeks later, and a normal accuracy number treats those two things as identical.
 
-The other thing is that topics are not all worth the same. Missing 20 percent of the linear equation questions costs you far more than missing 20 percent of a topic that shows up once or twice a test.
-
-StudyPath does both. The scoring code is in `backend/app/algorithm/` and there is a test suite that checks the numbers by hand. The next section walks through how it works.
+I built StudyPath partly for internship applications and partly because this is a problem I actually think about a lot. The scoring code is in `backend/app/algorithm/` and there is a test suite that checks the numbers by hand. The next section walks through how it works.
 
 ## How the recommendation algorithm works
 

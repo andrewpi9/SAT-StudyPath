@@ -119,7 +119,7 @@ export default function LogAttemptPage() {
                           .filter((t) => t.section === section)
                           .map((t) => (
                             <option key={t.topic_id} value={t.topic_id}>
-                              {t.skill_name} —{' '}
+                              {t.skill_name} ·{' '}
                               {t.attempts_count === 0 ? 'not started' : pct(t.decayed_mastery)}
                             </option>
                           ))}

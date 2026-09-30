@@ -16,7 +16,7 @@ export default function StudyPlanPage() {
     <main className="mx-auto max-w-3xl px-6 py-8">
       <PageHeader
         title="Today's Study Plan"
-        subtitle="Ranked by how much test score is at risk right now — weak, high-frequency, or fading skills first."
+        subtitle="Ranked by how much test score is at risk right now, starting with weak, high frequency, or fading skills."
       />
 
       <div className="mt-6">

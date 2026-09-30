@@ -125,7 +125,7 @@ export default function MasteryHeatmap({ topics }: { topics: TopicMastery[] }) {
                               {topic.skill_name}
                             </span>
                             <span className="text-lg font-bold tabular-nums">
-                              {untouched ? '—' : pct(topic.decayed_mastery)}
+                              {untouched ? '·' : pct(topic.decayed_mastery)}
                             </span>
                           </div>
                         )

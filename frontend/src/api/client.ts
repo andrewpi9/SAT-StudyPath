@@ -55,7 +55,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   if (res.status === 401) {
     setToken(null)
     onUnauthorized?.()
-    throw new ApiError(401, 'Your session has expired — please log in again.')
+    throw new ApiError(401, 'Your session expired. Log in again.')
   }
   if (!res.ok) {
     const detail = await res.text().catch(() => res.statusText)
