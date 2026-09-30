@@ -167,12 +167,11 @@ The seed data is made up. A row looks like `topic=Linear Functions, correct=fals
 
 ## Deployment
 
-The deploy config is checked in. `render.yaml` sets up the FastAPI service and a free Postgres database, `backend/Dockerfile` builds the API, and `frontend/vercel.json` handles the SPA routing and forwards `/api` to the backend.
+The live version is a static build that runs the whole algorithm in the browser with no backend. `VITE_DEMO=1` swaps the API layer for an in browser store seeded from a dump of the real database, so the ranking, the decay and the readiness chart all compute client side from the same ported math. `vercel.json` and `.github/workflows/pages.yml` both build it that way.
 
-To move to Postgres you change `DATABASE_URL` and the app picks the right driver on its own, since `backend/app/config.py` cleans up the URL format. That driver only lives in `backend/requirements-prod.txt` so local installs stay light. Setting `SEED_DEMO_ON_STARTUP` to true makes the app rebuild the demo account the first time it boots.
+The config for running it as a real service is also checked in. `render.yaml` sets up the FastAPI service and a Postgres database and `backend/Dockerfile` builds the API. To move to Postgres you change `DATABASE_URL` and the app picks the right driver on its own, since `backend/app/config.py` cleans up the URL format. That driver only lives in `backend/requirements-prod.txt` so local installs stay light. Setting `SEED_DEMO_ON_STARTUP` to true makes the app rebuild the demo account the first time it boots.
 
-1. API. On Render, choose New, then Blueprint, then this repo. It builds the web service and the database and generates `JWT_SECRET`. Set `CORS_ORIGINS` to the frontend URL once you have it.
-2. Frontend. On Vercel, import the repo and set the root directory to `frontend`. Edit the `/api` rewrite in `vercel.json` to point at the Render URL.
+To run it with a real API instead of the browser demo, deploy `render.yaml` as a Render blueprint, set `CORS_ORIGINS` to the frontend origin, then drop `VITE_DEMO` from the frontend build and add a rewrite sending `/api` to the Render URL.
 
 ## What I'd build next
 
